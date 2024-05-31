@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { DoughnutChart, PieChart } from "../../../components/admin/Charts";
-import { Skeleton } from "../../../components/loader";
+import { Skeleton } from "../../../components/Loader";
 import { usePieQuery } from "../../../redux/api/dashboardAPI";
 import { RootState } from "../../../redux/store";
 
@@ -53,8 +53,7 @@ const PieCharts = () => {
                   data={categories.map((i) => Object.values(i)[0])}
                   backgroundColor={categories.map(
                     (i) =>
-                      `hsl(${Object.values(i)[0] * 4}, ${
-                        Object.values(i)[0]
+                      `hsl(${Object.values(i)[0] * 4}, ${Object.values(i)[0]
                       }%, 50%)`
                   )}
                   legends={false}

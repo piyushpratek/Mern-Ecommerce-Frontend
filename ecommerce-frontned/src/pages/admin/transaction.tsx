@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { Skeleton } from "../../components/loader";
+import { Skeleton } from "../../components/Loader";
 import { useAllOrdersQuery } from "../../redux/api/orderAPI";
 import { RootState } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
@@ -72,8 +72,8 @@ const Transaction = () => {
                 i.status === "Processing"
                   ? "red"
                   : i.status === "Shipped"
-                  ? "green"
-                  : "purple"
+                    ? "green"
+                    : "purple"
               }
             >
               {i.status}

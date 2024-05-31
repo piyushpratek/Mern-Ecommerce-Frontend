@@ -5,7 +5,7 @@ import { RootState } from "../../../redux/store";
 import { useBarQuery } from "../../../redux/api/dashboardAPI";
 import { CustomError } from "../../../types/api-types";
 import toast from "react-hot-toast";
-import { Skeleton } from "../../../components/loader";
+import { Skeleton } from "../../../components/Loader";
 import { getLastMonths } from "../../../utils/features";
 
 const { last12Months, last6Months } = getLastMonths();

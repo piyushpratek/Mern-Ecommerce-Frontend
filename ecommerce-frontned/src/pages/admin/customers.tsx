@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { Skeleton } from "../../components/loader";
+import { Skeleton } from "../../components/Loader";
 import {
   useAllUsersQuery,
   useDeleteUserMutation,

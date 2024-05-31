@@ -7,7 +7,7 @@ import { Navigate } from "react-router-dom";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { BarChart, DoughnutChart } from "../../components/admin/Charts";
 import Table from "../../components/admin/DashboardTable";
-import { Skeleton } from "../../components/loader";
+import { Skeleton } from "../../components/Loader";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
 import { RootState } from "../../redux/store";
 import { getLastMonths } from "../../utils/features";

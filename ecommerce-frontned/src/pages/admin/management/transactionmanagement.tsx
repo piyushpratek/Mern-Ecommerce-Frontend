@@ -2,7 +2,7 @@ import { FaTrash } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { Skeleton } from "../../../components/loader";
+import { Skeleton } from "../../../components/Loader";
 import {
   useDeleteOrderMutation,
   useOrderDetailsQuery,
@@ -126,8 +126,8 @@ const TransactionManagement = () => {
                     status === "Delivered"
                       ? "purple"
                       : status === "Shipped"
-                      ? "green"
-                      : "red"
+                        ? "green"
+                        : "red"
                   }
                 >
                   {status}
