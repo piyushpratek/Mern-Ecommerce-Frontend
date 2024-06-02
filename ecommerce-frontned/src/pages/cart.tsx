@@ -13,6 +13,13 @@ import { Link } from "react-router-dom";
 // import { RootState, server } from "../redux/store";
 // import { CartItem } from "../types/types";
 
+const cartItems = []
+const subtotal = 4000
+const tax = Math.round(subtotal * 0.18)
+const shippingCharges = 200
+const discount = 2000
+const total = subtotal + tax + shippingCharges
+
 const Cart = () => {
   // const { cartItems, subtotal, tax, total, shippingCharges, discount } =
   //   useSelector((state: RootState) => state.cartReducer);
@@ -34,32 +41,32 @@ const Cart = () => {
   // const removeHandler = (productId: string) => {
   //   dispatch(removeCartItem(productId));
   // };
-  // useEffect(() => {
-  //   const { token: cancelToken, cancel } = axios.CancelToken.source();
+  useEffect(() => {
+    // const { token: cancelToken, cancel } = axios.CancelToken.source();
 
-  //   const timeOutID = setTimeout(() => {
-  //     axios
-  //       .get(`${server}/api/v1/payment/discount?coupon=${couponCode}`, {
-  //         cancelToken,
-  //       })
-  //       .then((res) => {
-  //         dispatch(discountApplied(res.data.discount));
-  //         setIsValidCouponCode(true);
-  //         dispatch(calculatePrice());
-  //       })
-  //       .catch(() => {
-  //         dispatch(discountApplied(0));
-  //         setIsValidCouponCode(false);
-  //         dispatch(calculatePrice());
-  //       });
-  //   }, 1000);
+    const timeOutID = setTimeout(() => {
+      // axios
+      //   .get(`${server}/api/v1/payment/discount?coupon=${couponCode}`, {
+      //     cancelToken,
+      //   })
+      //   .then((res) => {
+      //     dispatch(discountApplied(res.data.discount));
+      //     setIsValidCouponCode(true);
+      //     dispatch(calculatePrice());
+      //   })
+      //   .catch(() => {
+      //     dispatch(discountApplied(0));
+      //     setIsValidCouponCode(false);
+      //     dispatch(calculatePrice());
+      //   });
+    }, 1000);
 
-  //   return () => {
-  //     clearTimeout(timeOutID);
-  //     cancel();
-  //     setIsValidCouponCode(false);
-  //   };
-  // }, [couponCode]);
+    return () => {
+      clearTimeout(timeOutID);
+      // cancel();
+      setIsValidCouponCode(false);
+    };
+  }, [couponCode]);
 
   // useEffect(() => {
   //   dispatch(calculatePrice());
@@ -83,14 +90,14 @@ const Cart = () => {
         )} */}
       </main>
       <aside>
-        {/* <p>Subtotal: ₹{subtotal}</p> */}
-        {/* <p>Shipping Charges: ₹{shippingCharges}</p> */}
-        {/* <p>Tax: ₹{tax}</p> */}
+        <p>Subtotal: ₹{subtotal}</p>
+        <p>Shipping Charges: ₹{shippingCharges}</p>
+        <p>Tax: ₹{tax}</p>
         <p>
-          {/* Discount: <em className="red"> - ₹{discount}</em> */}
+          Discount: <em className="red"> - ₹{discount}</em>
         </p>
         <p>
-          {/* <b>Total: ₹{total}</b> */}
+          <b>Total: ₹{total}</b>
         </p>
 
         <input
@@ -103,7 +110,7 @@ const Cart = () => {
         {couponCode &&
           (isValidCouponCode ? (
             <span className="green">
-              {/* ₹{discount} off using the <code>{couponCode}</code> */}
+              ₹{discount} off using the <code>{couponCode}</code>
             </span>
           ) : (
             <span className="red">
