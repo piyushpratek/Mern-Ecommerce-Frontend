@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ProductCard from "../components/Product-Card";
 // import ProductCard from "../components/product-card";
 // import { useCategoriesQuery, useSearchProductsQuery, } from "../redux/api/productAPI";
 // import { CustomError } from "../types/api-types";
@@ -43,6 +44,8 @@ const Search = () => {
   //   toast.success("Added to cart");
   // };
 
+  const addToCartHandler = () => { }
+
   const isPrevPage = page > 1;
   const isNextPage = page < 4;
 
@@ -85,6 +88,8 @@ const Search = () => {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="">ALL</option>
+            <option value="">Sample 1</option>
+            <option value="">Sample 2</option>
             {/* {!loadingCategories &&
               categoriesResponse?.categories.map((i) => (
                 <option key={i} value={i}>
@@ -107,19 +112,34 @@ const Search = () => {
           <Skeleton length={10} />
         ) : (
           <div className="search-product-list">
-            {searchedData?.products.map((i) => (
-              <ProductCard
-                key={i._id}
-                productId={i._id}
-                name={i.name}
-                price={i.price}
-                stock={i.stock}
-                handler={addToCartHandler}
-                photo={i.photo}
-              />
-            ))}
-          </div>
+          {searchedData?.products.map((i) => (
+            <ProductCard
+              key={i._id}
+              productId={i._id}
+              name={i.name}
+              price={i.price}
+              stock={i.stock}
+              handler={addToCartHandler}
+              photo={i.photo}
+            />
+          ))}
+        </div>
         )} */}
+
+        <div className="search-product-list">
+
+          <ProductCard
+            // key={i._id}
+            productId="example"
+            name="Macbook"
+            price={450000}
+            stock={52}
+            handler={addToCartHandler}
+            photo="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wfGVufDB8fDB8fHww"
+          />
+        </div>
+
+
 
         {/* {searchedData && searchedData.totalPage > 1 && (
           <article>
@@ -140,6 +160,24 @@ const Search = () => {
             </button>
           </article>
         )} */}
+
+        <article>
+          <button
+            disabled={!isPrevPage}
+            onClick={() => setPage((prev) => prev - 1)}
+          >
+            Prev
+          </button>
+          <span>
+            {page} of {4}
+          </span>
+          <button
+            disabled={!isNextPage}
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            Next
+          </button>
+        </article>
       </main>
     </div>
   );
