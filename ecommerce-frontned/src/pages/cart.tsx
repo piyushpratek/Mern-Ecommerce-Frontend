@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { VscError } from "react-icons/vsc";
 // import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import CartItem from "../components/Cart-Item";
 // import CartItemCard from "../components/cart-item";
 // import {
 //   addToCart,
@@ -13,7 +14,16 @@ import { Link } from "react-router-dom";
 // import { RootState, server } from "../redux/store";
 // import { CartItem } from "../types/types";
 
-const cartItems = []
+const cartItems = [
+  {
+    productId: "example",
+    photo: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wfGVufDB8fDB8fHww",
+    name: "macBook",
+    price: 30000,
+    quantity: 4,
+    stock: 10
+  }
+]
 const subtotal = 4000
 const tax = Math.round(subtotal * 0.18)
 const shippingCharges = 200
@@ -75,19 +85,19 @@ const Cart = () => {
   return (
     <div className="cart">
       <main>
-        {/* {cartItems.length > 0 ? (
+        {cartItems.length > 0 ? (
           cartItems.map((i, idx) => (
-            <CartItemCard
-              incrementHandler={incrementHandler}
-              decrementHandler={decrementHandler}
-              removeHandler={removeHandler}
+            <CartItem
+              // incrementHandler={incrementHandler}
+              // decrementHandler={decrementHandler}
+              // removeHandler={removeHandler}
               key={idx}
               cartItem={i}
             />
           ))
         ) : (
           <h1>No Items Added</h1>
-        )} */}
+        )}
       </main>
       <aside>
         <p>Subtotal: ₹{subtotal}</p>
@@ -118,7 +128,7 @@ const Cart = () => {
             </span>
           ))}
 
-        {/* {cartItems.length > 0 && <Link to="/shipping">Checkout</Link>} */}
+        {cartItems.length > 0 && <Link to="/shipping">Checkout</Link>}
       </aside>
     </div>
   );
