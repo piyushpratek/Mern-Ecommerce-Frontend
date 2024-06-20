@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 //   user: User | null;
 // }
 
-const user = { _id: "", role: "" }
+const user = { _id: "hello", role: "" }
 
 const Header = () => {
   // const Header = ({ user }: PropsType) => {
