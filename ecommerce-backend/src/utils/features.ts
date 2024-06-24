@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import { myCache } from "../app.js";
+// import { myCache } from "../app.js";
 import { Product } from "../models/product.js";
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
 
@@ -32,7 +32,7 @@ export const invalidateCache = ({
     if (typeof productId === "object")
       productId.forEach((i) => productKeys.push(`product-${i}`));
 
-    myCache.del(productKeys);
+    // myCache.del(productKeys);
   }
   if (order) {
     const ordersKeys: string[] = [
@@ -41,16 +41,16 @@ export const invalidateCache = ({
       `order-${orderId}`,
     ];
 
-    myCache.del(ordersKeys);
+    // myCache.del(ordersKeys);
   }
-  if (admin) {
-    myCache.del([
-      "admin-stats",
-      "admin-pie-charts",
-      "admin-bar-charts",
-      "admin-line-charts",
-    ]);
-  }
+  // if (admin) {
+  //   myCache.del([
+  //     "admin-stats",
+  //     "admin-pie-charts",
+  //     "admin-bar-charts",
+  //     "admin-line-charts",
+  //   ]);
+  // }
 };
 
 export const reduceStock = async (orderItems: OrderItemType[]) => {

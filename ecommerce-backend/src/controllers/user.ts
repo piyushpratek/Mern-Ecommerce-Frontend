@@ -3,6 +3,7 @@ import { User } from "../models/user.js";
 import { NewUserRequestBody } from "../types/types.js";
 import { TryCatch } from "../middlewares/error.js";
 import ErrorHandler from "../utils/utility-class.js";
+import { HttpStatus } from "../http-status.enum.js";
 
 export const newUser = TryCatch(
   async (
@@ -10,12 +11,12 @@ export const newUser = TryCatch(
     res: Response,
     next: NextFunction
   ) => {
-    const { name, email, photo, gender, _id, dob } = req.body;
+    const { name, email, photo, gender, _id, dob, role } = req.body;
 
     let user = await User.findById(_id);
 
     if (user)
-      return res.status(200).json({
+      return res.status(HttpStatus.OK).json({
         success: true,
         message: `Welcome, ${user.name}`,
       });
@@ -30,9 +31,10 @@ export const newUser = TryCatch(
       gender,
       _id,
       dob: new Date(dob),
+      role
     });
 
-    return res.status(201).json({
+    return res.status(HttpStatus.CREATED).json({
       success: true,
       message: `Welcome, ${user.name}`,
     });
@@ -42,7 +44,7 @@ export const newUser = TryCatch(
 export const getAllUsers = TryCatch(async (req, res, next) => {
   const users = await User.find({});
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     users,
   });
@@ -54,7 +56,7 @@ export const getUser = TryCatch(async (req, res, next) => {
 
   if (!user) return next(new ErrorHandler("Invalid Id", 400));
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     user,
   });
@@ -68,7 +70,7 @@ export const deleteUser = TryCatch(async (req, res, next) => {
 
   await user.deleteOne();
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     message: "User Deleted Successfully",
   });
