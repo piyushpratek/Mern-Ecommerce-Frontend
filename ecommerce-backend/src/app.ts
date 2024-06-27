@@ -1,14 +1,15 @@
 import { config } from "dotenv";
 import express, { Application } from "express";
-import { connectDB } from "./utils/features.js";
-import { errorMiddleware } from "./middlewares/error.js";
+// import { connectDB } from "./utils/features.js";
+// import { errorMiddleware } from "./middlewares/error.js";
 // import NodeCache from "node-cache";
 // import morgan from "morgan";
 // import Stripe from "stripe";
 // import cors from "cors";
 
 // Importing Routes
-import userRoute from "./routes/user.js";
+import userRoute from "../routes/user.js";
+import { errorMiddleware } from "../middlewares/error.js";
 // import productRoute from "./routes/products.js";
 // import orderRoute from "./routes/order.js";
 // import paymentRoute from "./routes/payment.js";
@@ -18,12 +19,12 @@ import userRoute from "./routes/user.js";
 //     path: "./.env",
 // });
 
-const port = process.env.PORT || 4000;
+// const port = process.env.PORT || 4000;
 // const mongoURI = process.env.MONGO_URI as any;
-const mongoURI = "mongodb://127.0.0.1:27017/ecommerce_2024";
+// const mongoURI = "mongodb://127.0.0.1:27017/ecommerce_2024";
 // const stripeKey = process.env.STRIPE_KEY || "";
 
-connectDB(mongoURI);
+// connectDB(mongoURI);
 
 // export const stripe = new Stripe(stripeKey);
 // export const myCache = new NodeCache();
@@ -48,7 +49,9 @@ app.use("/api/v1/user", userRoute);
 // app.use("/uploads", express.static("uploads"));
 app.use(errorMiddleware);
 
-app.listen(port, () => {
-    console.log(`Server is working on http://localhost:${port}`);
-    console.log(`Db is working on ${mongoURI}`);
-});
+// app.listen(port, () => {
+//     console.log(`Server is working on http://localhost:${port}`);
+//     console.log(`Db is working on ${mongoURI}`);
+// });
+
+export default app

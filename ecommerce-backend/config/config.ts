@@ -28,6 +28,8 @@ if (!envPath) {
 // import env values from file `envPath`
 dotenv.config({ path: envPath })
 
+
+
 // Validation for environment variables from `envPath` file
 if (!process.env.PORT) {
   logger.error('Please define PORT in your .env file.')
@@ -40,16 +42,6 @@ if (!process.env.MONGO_URI) {
 }
 
 
-
-
-
-
-
-
-
-
 export const MONGO_URI = process.env.MONGO_URI
 export const NODE_ENV = process.env.NODE_ENV
 export const PORT = Number(process.env.PORT)
-
-
