@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../models/user.js";
 import { NewUserRequestBody } from "../types/types.js";
-import { TryCatch } from "../middlewares/error.js";
+import { catchAsyncErrors } from "../middlewares/error.js";
 import ErrorHandler from "../utils/utility-class.js";
 import { HttpStatus } from "../http-status.enum.js";
 
-export const newUser = TryCatch(
+export const newUser = catchAsyncErrors(
   async (
     req: Request<{}, {}, NewUserRequestBody>,
     res: Response,
@@ -40,7 +40,7 @@ export const newUser = TryCatch(
   }
 );
 
-export const getAllUsers = TryCatch(async (req, res, next) => {
+export const getAllUsers = catchAsyncErrors(async (req, res, next) => {
   const users = await User.find({});
 
   return res.status(HttpStatus.OK).json({
@@ -49,7 +49,7 @@ export const getAllUsers = TryCatch(async (req, res, next) => {
   });
 });
 
-export const getUser = TryCatch(async (req, res, next) => {
+export const getUser = catchAsyncErrors(async (req, res, next) => {
   const id = req.params.id;
   const user = await User.findById(id);
 
@@ -61,7 +61,7 @@ export const getUser = TryCatch(async (req, res, next) => {
   });
 });
 
-export const deleteUser = TryCatch(async (req, res, next) => {
+export const deleteUser = catchAsyncErrors(async (req, res, next) => {
   const id = req.params.id;
   const user = await User.findById(id);
 

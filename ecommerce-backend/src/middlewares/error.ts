@@ -19,8 +19,8 @@ export const errorMiddleware = (
   });
 };
 
-export const TryCatch =
+export const catchAsyncErrors =
   (func: ControllerType) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    return Promise.resolve(func(req, res, next)).catch(next);
-  };
+    (req: Request, res: Response, next: NextFunction) => {
+      return Promise.resolve(func(req, res, next)).catch(next);
+    };

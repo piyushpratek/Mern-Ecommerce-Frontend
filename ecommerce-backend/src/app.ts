@@ -19,7 +19,8 @@ import userRoute from "./routes/user.js";
 // });
 
 const port = process.env.PORT || 4000;
-const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/ecommerce_2024";
+// const mongoURI = process.env.MONGO_URI as any;
+const mongoURI = "mongodb://127.0.0.1:27017/ecommerce_2024";
 // const stripeKey = process.env.STRIPE_KEY || "";
 
 connectDB(mongoURI);

@@ -1,5 +1,5 @@
 // import { myCache } from "../app.js";
-import { TryCatch } from "../middlewares/error.js";
+import { catchAsyncErrors } from "../middlewares/error.js";
 import { Order } from "../models/order.js";
 import { Product } from "../models/product.js";
 import { User } from "../models/user.js";
@@ -9,7 +9,7 @@ import {
   getInventories,
 } from "../utils/features.js";
 
-export const getDashboardStats = TryCatch(async (req, res, next) => {
+export const getDashboardStats = catchAsyncErrors(async (req, res, next) => {
   let stats = {};
 
   const key = "admin-stats";
@@ -200,7 +200,7 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
   });
 });
 
-export const getPieCharts = TryCatch(async (req, res, next) => {
+export const getPieCharts = catchAsyncErrors(async (req, res, next) => {
   let charts;
   const key = "admin-pie-charts";
 
@@ -313,7 +313,7 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
   });
 });
 
-export const getBarCharts = TryCatch(async (req, res, next) => {
+export const getBarCharts = catchAsyncErrors(async (req, res, next) => {
   let charts;
   const key = "admin-bar-charts";
 
@@ -373,7 +373,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
   });
 });
 
-export const getLineCharts = TryCatch(async (req, res, next) => {
+export const getLineCharts = catchAsyncErrors(async (req, res, next) => {
   let charts;
   const key = "admin-line-charts";
 

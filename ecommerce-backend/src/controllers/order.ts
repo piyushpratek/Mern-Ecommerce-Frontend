@@ -1,12 +1,12 @@
 import { Request } from "express";
-import { TryCatch } from "../middlewares/error.js";
+import { catchAsyncErrors } from "../middlewares/error.js";
 import { NewOrderRequestBody } from "../types/types.js";
 import { Order } from "../models/order.js";
 import { invalidateCache, reduceStock } from "../utils/features.js";
 import ErrorHandler from "../utils/utility-class.js";
 // import { myCache } from "../app.js";
 
-export const myOrders = TryCatch(async (req, res, next) => {
+export const myOrders = catchAsyncErrors(async (req, res, next) => {
   const { id: user } = req.query;
 
   const key = `my-orders-${user}`;
@@ -24,7 +24,7 @@ export const myOrders = TryCatch(async (req, res, next) => {
   });
 });
 
-export const allOrders = TryCatch(async (req, res, next) => {
+export const allOrders = catchAsyncErrors(async (req, res, next) => {
   const key = `all-orders`;
 
   // let orders = [];
@@ -40,7 +40,7 @@ export const allOrders = TryCatch(async (req, res, next) => {
   });
 });
 
-export const getSingleOrder = TryCatch(async (req, res, next) => {
+export const getSingleOrder = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const key = `order-${id}`;
 
@@ -60,7 +60,7 @@ export const getSingleOrder = TryCatch(async (req, res, next) => {
   });
 });
 
-export const newOrder = TryCatch(
+export const newOrder = catchAsyncErrors(
   async (req: Request<{}, {}, NewOrderRequestBody>, res, next) => {
     const {
       shippingInfo,
@@ -104,7 +104,7 @@ export const newOrder = TryCatch(
   }
 );
 
-export const processOrder = TryCatch(async (req, res, next) => {
+export const processOrder = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
   const order = await Order.findById(id);
@@ -139,7 +139,7 @@ export const processOrder = TryCatch(async (req, res, next) => {
   });
 });
 
-export const deleteOrder = TryCatch(async (req, res, next) => {
+export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
   const order = await Order.findById(id);

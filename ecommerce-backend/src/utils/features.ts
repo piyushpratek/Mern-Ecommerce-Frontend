@@ -4,12 +4,13 @@ import { Product } from "../models/product.js";
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
 
 export const connectDB = (uri: string) => {
+  mongoose.set('strictQuery', true)
   mongoose
-    .connect(uri, {
-      dbName: "Ecommerce 24",
-    })
+    .connect(uri)
     .then((c) => console.log(`DB Connected to ${c.connection.host}`))
-    .catch((e) => console.log(e));
+    .catch((e) => {
+      return console.log("Failed to connect to DB", e);
+    });
 };
 
 export const invalidateCache = ({

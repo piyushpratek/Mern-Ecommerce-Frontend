@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { TryCatch } from "../middlewares/error.js";
+import { catchAsyncErrors } from "../middlewares/error.js";
 import {
   BaseQuery,
   NewProductRequestBody,
@@ -13,7 +13,7 @@ import { invalidateCache } from "../utils/features.js";
 // import { faker } from "@faker-js/faker";
 
 // Revalidate on New,Update,Delete Product & on New Order
-export const getlatestProducts = TryCatch(async (req, res, next) => {
+export const getlatestProducts = catchAsyncErrors(async (req, res, next) => {
   let products;
 
   // if (myCache.has("latest-products"))
@@ -30,7 +30,7 @@ export const getlatestProducts = TryCatch(async (req, res, next) => {
 });
 
 // Revalidate on New,Update,Delete Product & on New Order
-export const getAllCategories = TryCatch(async (req, res, next) => {
+export const getAllCategories = catchAsyncErrors(async (req, res, next) => {
   let categories;
 
   // if (myCache.has("categories"))
@@ -47,7 +47,7 @@ export const getAllCategories = TryCatch(async (req, res, next) => {
 });
 
 // Revalidate on New,Update,Delete Product & on New Order
-export const getAdminProducts = TryCatch(async (req, res, next) => {
+export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
   let products;
   // if (myCache.has("all-products"))
   //   products = JSON.parse(myCache.get("all-products") as string);
@@ -62,7 +62,7 @@ export const getAdminProducts = TryCatch(async (req, res, next) => {
   });
 });
 
-export const getSingleProduct = TryCatch(async (req, res, next) => {
+export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   let product;
   const id = req.params.id;
   // if (myCache.has(`product-${id}`))
@@ -81,7 +81,7 @@ export const getSingleProduct = TryCatch(async (req, res, next) => {
   });
 });
 
-export const newProduct = TryCatch(
+export const newProduct = catchAsyncErrors(
   async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
     const { name, price, stock, category } = req.body;
     // const photo = req.file;
@@ -113,7 +113,7 @@ export const newProduct = TryCatch(
   }
 );
 
-export const updateProduct = TryCatch(async (req, res, next) => {
+export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const { name, price, stock, category } = req.body;
   // const photo = req.file;
@@ -147,7 +147,7 @@ export const updateProduct = TryCatch(async (req, res, next) => {
   });
 });
 
-export const deleteProduct = TryCatch(async (req, res, next) => {
+export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) return next(new ErrorHandler("Product Not Found", 404));
 
@@ -169,7 +169,7 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
   });
 });
 
-export const getAllProducts = TryCatch(
+export const getAllProducts = catchAsyncErrors(
   async (req: Request<{}, {}, {}, SearchRequestQuery>, res, next) => {
     const { search, sort, category, price } = req.query;
 

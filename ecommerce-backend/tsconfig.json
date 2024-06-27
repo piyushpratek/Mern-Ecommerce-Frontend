@@ -5,8 +5,8 @@
     "rootDir": "src",
     "moduleResolution": "NodeNext",
     "outDir": "dist",
-    "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "strict": true
+    // "esModuleInterop": true,
+    // "forceConsistentCasingInFileNames": true
   }
 }
