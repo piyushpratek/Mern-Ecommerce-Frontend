@@ -5,11 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node dist/server.js",
-    "start:dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only --clear ./server.ts",
+    "start": "node dist/app.js",
     "build": "tsc",
     "watch": "tsc -w",
-    "dev": " nodemon dist/server.js",
+    "dev": " nodemon dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
