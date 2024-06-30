@@ -8,7 +8,7 @@ export default {
     try {
       mongoose.set('strictQuery', true)
       const conn = await mongoose.connect(MONGO_URI)
-      if (process.env.NODE_ENV !== 'test') {
+      if (process.env.NODE_ENV !== 'development') {
         logger.success(`MONGO DB CONNECTED: ${conn.connection.host}`)
       }
     } catch (error) {

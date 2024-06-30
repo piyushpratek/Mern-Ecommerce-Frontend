@@ -20,12 +20,6 @@ import { connectDB } from "./utils/features.js";
 //     path: "./.env",
 // });
 
-const port = process.env.PORT || 4000;
-// const mongoURI = process.env.MONGO_URI as any;
-const mongoURI = "mongodb://127.0.0.1:27017/ecommerce_2024";
-// const stripeKey = process.env.STRIPE_KEY || "";
-
-connectDB(mongoURI);
 
 // export const stripe = new Stripe(stripeKey);
 // export const myCache = new NodeCache();
@@ -49,10 +43,5 @@ app.use("/api/v1/user", userRoute);
 
 // app.use("/uploads", express.static("uploads"));
 app.use(errorMiddleware);
-
-app.listen(port, () => {
-    console.log(`Server is working on http://localhost:${port}`);
-    console.log(`Db is working on ${mongoURI}`);
-});
 
 export default app

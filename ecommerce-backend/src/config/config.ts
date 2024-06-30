@@ -28,6 +28,8 @@ if (!envPath) {
 // import env values from file `envPath`
 dotenv.config({ path: envPath })
 
+logger.success('Using env file:', envPath);
+
 
 
 // Validation for environment variables from `envPath` file
