@@ -9,7 +9,7 @@ if (!process.env.NODE_ENV) {
   process.exit(1)
 }
 
-logger.success('NODE_ENV:', process.env.NODE_ENV)
+logger.info('NODE_ENV:', process.env.NODE_ENV)
 
 let envPath: string | undefined
 
@@ -28,7 +28,7 @@ if (!envPath) {
 // import env values from file `envPath`
 dotenv.config({ path: envPath })
 
-logger.success('Using env file:', envPath);
+logger.info('Using env file:', envPath);
 
 
 
