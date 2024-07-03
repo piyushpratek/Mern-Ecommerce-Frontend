@@ -14,9 +14,11 @@ router.route('/new').post(newUser)
 // app.post("/new", newUser);
 
 // Route - /api/v1/user/all
+router.route('/all').get(getAllUsers)
 // app.get("/all", adminOnly, getAllUsers);
 
 // Route - /api/v1/user/dynamicID
+router.route('/:id').get(getUser).delete(deleteUser)
 // app.route("/:id").get(getUser).delete(adminOnly, deleteUser);
 
 export default router;

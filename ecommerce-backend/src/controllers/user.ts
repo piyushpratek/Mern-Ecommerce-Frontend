@@ -13,18 +13,18 @@ export const newUser = catchAsyncErrors(
   ) => {
     const { name, email, photo, gender, _id, dob } = req.body;
 
-    // let user = await User.findById(_id);
+    let user = await User.findById(_id);
 
-    // if (user)
-    //   return res.status(HttpStatus.OK).json({
-    //     success: true,
-    //     message: `Welcome, ${user.name}`,
-    //   });
+    if (user)
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: `Welcome, ${user.name}`,
+      });
 
-    // if (!_id || !name || !email || !photo || !gender || !dob)
-    //   return next(new ErrorHandler("Please add all fields", 400));
+    if (!_id || !name || !email || !photo || !gender || !dob)
+      return next(new ErrorHandler("Please add all fields", HttpStatus.BAD_REQUEST));
 
-    const user = await User.create({
+    user = await User.create({
       name,
       email,
       photo,
@@ -53,7 +53,7 @@ export const getUser = catchAsyncErrors(async (req, res, next) => {
   const id = req.params.id;
   const user = await User.findById(id);
 
-  if (!user) return next(new ErrorHandler("Invalid Id", 400));
+  if (!user) return next(new ErrorHandler("Invalid Id", HttpStatus.BAD_REQUEST));
 
   return res.status(HttpStatus.OK).json({
     success: true,
@@ -65,7 +65,7 @@ export const deleteUser = catchAsyncErrors(async (req, res, next) => {
   const id = req.params.id;
   const user = await User.findById(id);
 
-  if (!user) return next(new ErrorHandler("Invalid Id", 400));
+  if (!user) return next(new ErrorHandler("Invalid Id", HttpStatus.BAD_REQUEST));
 
   await user.deleteOne();
 
