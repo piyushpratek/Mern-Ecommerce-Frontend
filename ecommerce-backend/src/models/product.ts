@@ -8,7 +8,7 @@ const schema = new mongoose.Schema(
     },
     photo: {
       type: String,
-      required: [true, "Please enter Photo"],
+      required: [true, "Please attach Photo"],
     },
     price: {
       type: Number,

@@ -10,7 +10,40 @@ import ErrorHandler from "../utils/utility-class.js";
 import { rm } from "fs";
 // import { myCache } from "../app.js";
 import { invalidateCache } from "../utils/features.js";
+import { HttpStatus } from "../http-status.enum.js";
 // import { faker } from "@faker-js/faker";
+
+export const newProduct = catchAsyncErrors(
+  async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
+    const { name, price, stock, category } = req.body;
+    const photo = req.file;
+
+    if (!photo) return next(new ErrorHandler("Please add Photo", HttpStatus.BAD_REQUEST));
+
+    if (!name || !price || !stock || !category) {
+      rm(photo.path, () => {
+        console.log("Deleted");
+      });
+
+      return next(new ErrorHandler("Please enter All Fields", HttpStatus.BAD_REQUEST));
+    }
+
+    await Product.create({
+      name,
+      price,
+      stock,
+      category: category.toLowerCase(),
+      photo: photo.path,
+    });
+
+    // invalidateCache({ product: true, admin: true });
+
+    return res.status(HttpStatus.CREATED).json({
+      success: true,
+      message: "Product Created Successfully",
+    });
+  }
+);
 
 // Revalidate on New,Update,Delete Product & on New Order
 export const getlatestProducts = catchAsyncErrors(async (req, res, next) => {
@@ -19,11 +52,11 @@ export const getlatestProducts = catchAsyncErrors(async (req, res, next) => {
   // if (myCache.has("latest-products"))
   //   products = JSON.parse(myCache.get("latest-products") as string);
   // else {
-  //   products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
+  products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
   //   myCache.set("latest-products", JSON.stringify(products));
   // }
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     products,
   });
@@ -36,11 +69,11 @@ export const getAllCategories = catchAsyncErrors(async (req, res, next) => {
   // if (myCache.has("categories"))
   //   categories = JSON.parse(myCache.get("categories") as string);
   // else {
-  //   categories = await Product.distinct("category");
+  categories = await Product.distinct("category");
   //   myCache.set("categories", JSON.stringify(categories));
   // }
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     categories,
   });
@@ -52,11 +85,11 @@ export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
   // if (myCache.has("all-products"))
   //   products = JSON.parse(myCache.get("all-products") as string);
   // else {
-  //   products = await Product.find({});
+  products = await Product.find({});
   //   myCache.set("all-products", JSON.stringify(products));
   // }
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     products,
   });
@@ -68,65 +101,35 @@ export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   // if (myCache.has(`product-${id}`))
   //   product = JSON.parse(myCache.get(`product-${id}`) as string);
   // else {
-  //   product = await Product.findById(id);
+  product = await Product.findById(id);
 
-  //   if (!product) return next(new ErrorHandler("Product Not Found", 404));
+  if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
 
   //   myCache.set(`product-${id}`, JSON.stringify(product));
   // }
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     product,
   });
 });
 
-export const newProduct = catchAsyncErrors(
-  async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
-    const { name, price, stock, category } = req.body;
-    // const photo = req.file;
 
-    // if (!photo) return next(new ErrorHandler("Please add Photo", 400));
-
-    // if (!name || !price || !stock || !category) {
-    //   rm(photo.path, () => {
-    //     console.log("Deleted");
-    //   });
-
-    //   return next(new ErrorHandler("Please enter All Fields", 400));
-    // }
-
-    await Product.create({
-      name,
-      price,
-      stock,
-      category: category.toLowerCase(),
-      // photo: photo.path,
-    });
-
-    invalidateCache({ product: true, admin: true });
-
-    return res.status(201).json({
-      success: true,
-      message: "Product Created Successfully",
-    });
-  }
-);
 
 export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const { name, price, stock, category } = req.body;
-  // const photo = req.file;
+  const photo = req.file;
   const product = await Product.findById(id);
 
-  if (!product) return next(new ErrorHandler("Product Not Found", 404));
+  if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
 
-  // if (photo) {
-  //   rm(product.photo!, () => {
-  //     console.log("Old Photo Deleted");
-  //   });
-  //   product.photo = photo.path;
-  // }
+  if (photo) {
+    rm(product.photo!, () => {
+      console.log("Old Photo Deleted");
+    });
+    product.photo = photo.path;
+  }
 
   if (name) product.name = name;
   if (price) product.price = price;
@@ -135,13 +138,13 @@ export const updateProduct = catchAsyncErrors(async (req, res, next) => {
 
   await product.save();
 
-  invalidateCache({
-    product: true,
-    productId: String(product._id),
-    admin: true,
-  });
+  // invalidateCache({
+  //   product: true,
+  //   productId: String(product._id),
+  //   admin: true,
+  // });
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     message: "Product Updated Successfully",
   });
@@ -149,7 +152,7 @@ export const updateProduct = catchAsyncErrors(async (req, res, next) => {
 
 export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
-  if (!product) return next(new ErrorHandler("Product Not Found", 404));
+  if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
 
   rm(product.photo!, () => {
     console.log("Product Photo Deleted");
@@ -157,13 +160,13 @@ export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
 
   await product.deleteOne();
 
-  invalidateCache({
-    product: true,
-    productId: String(product._id),
-    admin: true,
-  });
+  // invalidateCache({
+  //   product: true,
+  //   productId: String(product._id),
+  //   admin: true,
+  // });
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     message: "Product Deleted Successfully",
   });

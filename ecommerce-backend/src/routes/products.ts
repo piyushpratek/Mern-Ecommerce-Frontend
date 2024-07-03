@@ -10,32 +10,39 @@ import {
   newProduct,
   updateProduct,
 } from "../controllers/product.js";
-// import { singleUpload } from "../middlewares/multer.js";
+import { singleUpload } from "../middlewares/multer.js";
 
-const app = express.Router();
+const router = express.Router();
 
 //To Create New Product  - /api/v1/product/new
 // app.post("/new", adminOnly, singleUpload, newProduct);
-app.post("/new", adminOnly, newProduct);
+router.route("/new").post(adminOnly, singleUpload, newProduct)
+// app.post("/new", adminOnly, newProduct);
 
 //To get all Products with filters  - /api/v1/product/all
-app.get("/all", getAllProducts);
+// app.get("/all", getAllProducts);
 
 //To get last 10 Products  - /api/v1/product/latest
-app.get("/latest", getlatestProducts);
+router.route("/latest").get(getlatestProducts)
+// app.get("/latest", getlatestProducts);
 
 //To get all unique Categories  - /api/v1/product/categories
-app.get("/categories", getAllCategories);
+router.route("/categories").get(getAllCategories)
+// app.get("/categories", getAllCategories);
 
 //To get all Products   - /api/v1/product/admin-products
-app.get("/admin-products", adminOnly, getAdminProducts);
+router.route("/admin-products").get(adminOnly, getAdminProducts)
+
+// app.get("/admin-products", adminOnly, getAdminProducts);
 
 // To get, update, delete Product
-app
-  .route("/:id")
-  .get(getSingleProduct)
-  // .put(adminOnly, singleUpload, updateProduct)
-  .put(adminOnly, updateProduct)
-  .delete(adminOnly, deleteProduct);
+router.route("/:id").get(getSingleProduct).put(adminOnly, singleUpload, updateProduct).delete(adminOnly, deleteProduct)
 
-export default app;
+// app
+//   .route("/:id")
+//   .get(getSingleProduct)
+//   // .put(adminOnly, singleUpload, updateProduct)
+//   .put(adminOnly, updateProduct)
+//   .delete(adminOnly, deleteProduct);
+
+export default router;
