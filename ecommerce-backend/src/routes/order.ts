@@ -19,10 +19,11 @@ router.route('/new').post(newOrder)
 router.route('/my').get(myOrders)
 // app.get("/my", myOrders);
 
-// route - /api/v1/order/my
-router.route('/all').get(allOrders)
+// route - /api/v1/order/all
+router.route('/all').get(adminOnly, allOrders)
 // app.get("/all", adminOnly, allOrders);
 
+router.route('/:id').get(getSingleOrder).put(adminOnly, processOrder).delete(adminOnly, deleteOrder)
 // app
 //   .route("/:id")
 //   .get(getSingleOrder)

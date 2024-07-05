@@ -4,39 +4,40 @@ import { NewOrderRequestBody } from "../types/types.js";
 import { Order } from "../models/order.js";
 import { invalidateCache, reduceStock } from "../utils/features.js";
 import ErrorHandler from "../utils/utility-class.js";
-// import { myCache } from "../app.js";
+import { HttpStatus } from "../http-status.enum.js";
+import { myCache } from "../app.js";
 
 export const myOrders = catchAsyncErrors(async (req, res, next) => {
   const { id: user } = req.query;
 
   const key = `my-orders-${user}`;
 
-  // let orders = [];
+  let orders = [];
 
-  // if (myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
-  // else {
-  //   orders = await Order.find({ user });
-  //   myCache.set(key, JSON.stringify(orders));
-  // }
-  return res.status(200).json({
+  if (myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
+  else {
+    orders = await Order.find({ user });
+    myCache.set(key, JSON.stringify(orders));
+  }
+  return res.status(HttpStatus.OK).json({
     success: true,
-    // orders,
+    orders,
   });
 });
 
 export const allOrders = catchAsyncErrors(async (req, res, next) => {
   const key = `all-orders`;
 
-  // let orders = [];
+  let orders = [];
 
-  // if (myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
-  // else {
-  //   orders = await Order.find().populate("user", "name");
-  //   myCache.set(key, JSON.stringify(orders));
-  // }
-  return res.status(200).json({
+  if (myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
+  else {
+    orders = await Order.find().populate("user", "name");
+    myCache.set(key, JSON.stringify(orders));
+  }
+  return res.status(HttpStatus.OK).json({
     success: true,
-    // orders,
+    orders,
   });
 });
 
@@ -46,15 +47,15 @@ export const getSingleOrder = catchAsyncErrors(async (req, res, next) => {
 
   let order;
 
-  // if (myCache.has(key)) order = JSON.parse(myCache.get(key) as string);
-  // else {
-  //   order = await Order.findById(id).populate("user", "name");
+  if (myCache.has(key)) order = JSON.parse(myCache.get(key) as string);
+  else {
+    order = await Order.findById(id).populate("user", "name");
 
-  //   if (!order) return next(new ErrorHandler("Order Not Found", 404));
+    if (!order) return next(new ErrorHandler("Order Not Found", HttpStatus.NOT_FOUND));
 
-  //   myCache.set(key, JSON.stringify(order));
-  // }
-  return res.status(200).json({
+    myCache.set(key, JSON.stringify(order));
+  }
+  return res.status(HttpStatus.OK).json({
     success: true,
     order,
   });
@@ -74,7 +75,7 @@ export const newOrder = catchAsyncErrors(
     } = req.body;
 
     if (!shippingInfo || !orderItems || !user || !subtotal || !tax || !total)
-      return next(new ErrorHandler("Please Enter All Fields", 400));
+      return next(new ErrorHandler("Please Enter All Fields", HttpStatus.BAD_REQUEST));
 
     const order = await Order.create({
       shippingInfo,
@@ -97,7 +98,7 @@ export const newOrder = catchAsyncErrors(
       productId: order.orderItems.map((i) => String(i.productId)),
     });
 
-    return res.status(201).json({
+    return res.status(HttpStatus.CREATED).json({
       success: true,
       message: "Order Placed Successfully",
     });
@@ -109,7 +110,7 @@ export const processOrder = catchAsyncErrors(async (req, res, next) => {
 
   const order = await Order.findById(id);
 
-  if (!order) return next(new ErrorHandler("Order Not Found", 404));
+  if (!order) return next(new ErrorHandler("Order Not Found", HttpStatus.NOT_FOUND));
 
   switch (order.status) {
     case "Processing":
@@ -133,7 +134,7 @@ export const processOrder = catchAsyncErrors(async (req, res, next) => {
     orderId: String(order._id),
   });
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     message: "Order Processed Successfully",
   });
@@ -143,7 +144,7 @@ export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
   const order = await Order.findById(id);
-  if (!order) return next(new ErrorHandler("Order Not Found", 404));
+  if (!order) return next(new ErrorHandler("Order Not Found", HttpStatus.NOT_FOUND));
 
   await order.deleteOne();
 
@@ -155,7 +156,7 @@ export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
     orderId: String(order._id),
   });
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     message: "Order Deleted Successfully",
   });

@@ -17,8 +17,8 @@ export const invalidateCache = ({
   product,
   order,
   admin,
-  // userId,
-  // orderId,
+  userId,
+  orderId,
   productId,
 }: InvalidateCacheProps) => {
   if (product) {
@@ -38,11 +38,11 @@ export const invalidateCache = ({
   if (order) {
     const ordersKeys: string[] = [
       "all-orders",
-      // `my-orders-${userId}`,
-      // `order-${orderId}`,
+      `my-orders-${userId}`,
+      `order-${orderId}`,
     ];
 
-    // myCache.del(ordersKeys);
+    myCache.del(ordersKeys);
   }
   // if (admin) {
   //   myCache.del([
