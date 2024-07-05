@@ -8,7 +8,7 @@ import {
 import { Product } from "../models/product.js";
 import ErrorHandler from "../utils/utility-class.js";
 import { rm } from "fs";
-// import { myCache } from "../app.js";
+import { myCache } from "../app.js";
 import { invalidateCache } from "../utils/features.js";
 import { HttpStatus } from "../http-status.enum.js";
 // import { faker } from "@faker-js/faker";
@@ -49,12 +49,12 @@ export const newProduct = catchAsyncErrors(
 export const getlatestProducts = catchAsyncErrors(async (req, res, next) => {
   let products;
 
-  // if (myCache.has("latest-products"))
-  //   products = JSON.parse(myCache.get("latest-products") as string);
-  // else {
-  products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
-  //   myCache.set("latest-products", JSON.stringify(products));
-  // }
+  if (myCache.has("latest-products"))
+    products = JSON.parse(myCache.get("latest-products") as string);
+  else {
+    products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
+    myCache.set("latest-products", JSON.stringify(products));
+  }
 
   return res.status(HttpStatus.OK).json({
     success: true,
@@ -66,12 +66,12 @@ export const getlatestProducts = catchAsyncErrors(async (req, res, next) => {
 export const getAllCategories = catchAsyncErrors(async (req, res, next) => {
   let categories;
 
-  // if (myCache.has("categories"))
-  //   categories = JSON.parse(myCache.get("categories") as string);
-  // else {
-  categories = await Product.distinct("category");
-  //   myCache.set("categories", JSON.stringify(categories));
-  // }
+  if (myCache.has("categories"))
+    categories = JSON.parse(myCache.get("categories") as string);
+  else {
+    categories = await Product.distinct("category");
+    myCache.set("categories", JSON.stringify(categories));
+  }
 
   return res.status(HttpStatus.OK).json({
     success: true,
@@ -82,12 +82,12 @@ export const getAllCategories = catchAsyncErrors(async (req, res, next) => {
 // Revalidate on New,Update,Delete Product & on New Order
 export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
   let products;
-  // if (myCache.has("all-products"))
-  //   products = JSON.parse(myCache.get("all-products") as string);
-  // else {
-  products = await Product.find({});
-  //   myCache.set("all-products", JSON.stringify(products));
-  // }
+  if (myCache.has("all-products"))
+    products = JSON.parse(myCache.get("all-products") as string);
+  else {
+    products = await Product.find({});
+    myCache.set("all-products", JSON.stringify(products));
+  }
 
   return res.status(HttpStatus.OK).json({
     success: true,
@@ -98,15 +98,15 @@ export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
 export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   let product;
   const id = req.params.id;
-  // if (myCache.has(`product-${id}`))
-  //   product = JSON.parse(myCache.get(`product-${id}`) as string);
-  // else {
-  product = await Product.findById(id);
+  if (myCache.has(`product-${id}`))
+    product = JSON.parse(myCache.get(`product-${id}`) as string);
+  else {
+    product = await Product.findById(id);
 
-  if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
+    if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
 
-  //   myCache.set(`product-${id}`, JSON.stringify(product));
-  // }
+    myCache.set(`product-${id}`, JSON.stringify(product));
+  }
 
   return res.status(HttpStatus.OK).json({
     success: true,

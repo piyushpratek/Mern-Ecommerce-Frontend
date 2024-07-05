@@ -1,17 +1,17 @@
-import mongoose, { Document } from "mongoose";
+import { Document } from "mongoose";
 // import { myCache } from "../app.js";
 import { Product } from "../models/product.js";
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
 
-export const connectDB = (uri: string) => {
-  mongoose.set('strictQuery', true)
-  mongoose
-    .connect(uri)
-    .then((c) => console.log(`DB Connected to ${c.connection.host}`))
-    .catch((e) => {
-      return console.log("Failed to connect to DB", e);
-    });
-};
+// export const connectDB = (uri: string) => {
+//   mongoose.set('strictQuery', true)
+//   mongoose
+//     .connect(uri)
+//     .then((c) => console.log(`DB Connected to ${c.connection.host}`))
+//     .catch((e) => {
+//       return console.log("Failed to connect to DB", e);
+//     });
+// };
 
 export const invalidateCache = ({
   product,
