@@ -224,7 +224,7 @@ export const getAllProducts = catchAsyncErrors(
 //   for (let i = 0; i < count; i++) {
 //     const product = {
 //       name: faker.commerce.productName(),
-//       photo: "uploads\\5ba9bd91-b89c-40c2-bb8a-66703408f986.png",
+//       photo: "uploads\\2c9d22da-7d86-4cf3-a46b-056f068e2723.jpg",
 //       price: faker.commerce.price({ min: 1500, max: 80000, dec: 0 }),
 //       stock: faker.commerce.price({ min: 0, max: 100, dec: 0 }),
 //       category: faker.commerce.department(),
@@ -240,6 +240,7 @@ export const getAllProducts = catchAsyncErrors(
 
 //   console.log({ succecss: true });
 // };
+// generateRandomProducts(40)
 
 // const deleteRandomsProducts = async (count: number = 10) => {
 //   const products = await Product.find({}).skip(2);
@@ -251,3 +252,4 @@ export const getAllProducts = catchAsyncErrors(
 
 //   console.log({ succecss: true });
 // };
+// deleteRandomsProducts(40)

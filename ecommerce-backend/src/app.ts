@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-// import NodeCache from "node-cache";
+import NodeCache from "node-cache";
 // import morgan from "morgan";
 // import Stripe from "stripe";
 // import cors from "cors";
@@ -18,7 +18,7 @@ import productRoute from "./routes/products.js";
 
 
 // export const stripe = new Stripe(stripeKey);
-// export const myCache = new NodeCache();
+export const myCache = new NodeCache();
 
 const app: Application = express();
 

@@ -20,6 +20,7 @@ router.route("/new").post(adminOnly, singleUpload, newProduct)
 // app.post("/new", adminOnly, newProduct);
 
 //To get all Products with filters  - /api/v1/product/all
+router.route("/all").get(getAllProducts)
 // app.get("/all", getAllProducts);
 
 //To get last 10 Products  - /api/v1/product/latest
