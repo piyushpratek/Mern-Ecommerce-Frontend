@@ -1,5 +1,5 @@
 import { Document } from "mongoose";
-// import { myCache } from "../app.js";
+import { myCache } from "../app.js";
 import { Product } from "../models/product.js";
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
 
@@ -17,8 +17,8 @@ export const invalidateCache = ({
   product,
   order,
   admin,
-  userId,
-  orderId,
+  // userId,
+  // orderId,
   productId,
 }: InvalidateCacheProps) => {
   if (product) {
@@ -33,13 +33,13 @@ export const invalidateCache = ({
     if (typeof productId === "object")
       productId.forEach((i) => productKeys.push(`product-${i}`));
 
-    // myCache.del(productKeys);
+    myCache.del(productKeys);
   }
   if (order) {
     const ordersKeys: string[] = [
       "all-orders",
-      `my-orders-${userId}`,
-      `order-${orderId}`,
+      // `my-orders-${userId}`,
+      // `order-${orderId}`,
     ];
 
     // myCache.del(ordersKeys);

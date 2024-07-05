@@ -13,37 +13,6 @@ import { invalidateCache } from "../utils/features.js";
 import { HttpStatus } from "../http-status.enum.js";
 // import { faker } from "@faker-js/faker";
 
-export const newProduct = catchAsyncErrors(
-  async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
-    const { name, price, stock, category } = req.body;
-    const photo = req.file;
-
-    if (!photo) return next(new ErrorHandler("Please add Photo", HttpStatus.BAD_REQUEST));
-
-    if (!name || !price || !stock || !category) {
-      rm(photo.path, () => {
-        console.log("Deleted");
-      });
-
-      return next(new ErrorHandler("Please enter All Fields", HttpStatus.BAD_REQUEST));
-    }
-
-    await Product.create({
-      name,
-      price,
-      stock,
-      category: category.toLowerCase(),
-      photo: photo.path,
-    });
-
-    // invalidateCache({ product: true, admin: true });
-
-    return res.status(HttpStatus.CREATED).json({
-      success: true,
-      message: "Product Created Successfully",
-    });
-  }
-);
 
 // Revalidate on New,Update,Delete Product & on New Order
 export const getlatestProducts = catchAsyncErrors(async (req, res, next) => {
@@ -115,6 +84,37 @@ export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 });
 
 
+export const newProduct = catchAsyncErrors(
+  async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
+    const { name, price, stock, category } = req.body;
+    const photo = req.file;
+
+    if (!photo) return next(new ErrorHandler("Please add Photo", HttpStatus.BAD_REQUEST));
+
+    if (!name || !price || !stock || !category) {
+      rm(photo.path, () => {
+        console.log("Deleted");
+      });
+
+      return next(new ErrorHandler("Please enter All Fields", HttpStatus.BAD_REQUEST));
+    }
+
+    await Product.create({
+      name,
+      price,
+      stock,
+      category: category.toLowerCase(),
+      photo: photo.path,
+    });
+
+    invalidateCache({ product: true, admin: true });
+
+    return res.status(HttpStatus.CREATED).json({
+      success: true,
+      message: "Product Created Successfully",
+    });
+  }
+);
 
 export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
@@ -138,11 +138,11 @@ export const updateProduct = catchAsyncErrors(async (req, res, next) => {
 
   await product.save();
 
-  // invalidateCache({
-  //   product: true,
-  //   productId: String(product._id),
-  //   admin: true,
-  // });
+  invalidateCache({
+    product: true,
+    productId: String(product._id),
+    admin: true,
+  });
 
   return res.status(HttpStatus.OK).json({
     success: true,
@@ -160,11 +160,11 @@ export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
 
   await product.deleteOne();
 
-  // invalidateCache({
-  //   product: true,
-  //   productId: String(product._id),
-  //   admin: true,
-  // });
+  invalidateCache({
+    product: true,
+    productId: String(product._id),
+    admin: true,
+  });
 
   return res.status(HttpStatus.OK).json({
     success: true,
