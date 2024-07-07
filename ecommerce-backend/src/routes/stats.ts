@@ -7,18 +7,22 @@ import {
   getPieCharts,
 } from "../controllers/stats.js";
 
-const app = express.Router();
+const router = express.Router();
 
 // route - /api/v1/dashboard/stats
-app.get("/stats", adminOnly, getDashboardStats);
+router.route("/stats").get(adminOnly, getDashboardStats)
+// app.get("/stats", adminOnly, getDashboardStats);
 
 // route - /api/v1/dashboard/pie
-app.get("/pie", adminOnly, getPieCharts);
+router.route("/pie").get(adminOnly, getPieCharts)
+// app.get("/pie", adminOnly, getPieCharts);
 
 // route - /api/v1/dashboard/bar
-app.get("/bar", adminOnly, getBarCharts);
+router.route("/bar").get(adminOnly, getBarCharts)
+// app.get("/bar", adminOnly, getBarCharts);
 
 // route - /api/v1/dashboard/line
-app.get("/line", adminOnly, getLineCharts);
+router.route("/line").get(adminOnly, getLineCharts)
+// app.get("/line", adminOnly, getLineCharts);
 
-export default app;
+export default router;
