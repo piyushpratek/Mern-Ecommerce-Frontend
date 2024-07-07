@@ -8,21 +8,26 @@ import {
   newCoupon,
 } from "../controllers/payment.js";
 
-const app = express.Router();
+const router = express.Router();
 
 // route - /api/v1/payment/create
-app.post("/create", createPaymentIntent);
+router.route("/create").post(createPaymentIntent)
+// app.post("/create", createPaymentIntent);
 
 // route - /api/v1/payment/coupon/new
-app.get("/discount", applyDiscount);
+router.route("/discount").get(applyDiscount)
+// app.get("/discount", applyDiscount);
 
 // route - /api/v1/payment/coupon/new
-app.post("/coupon/new", adminOnly, newCoupon);
+router.route("/coupon/new").post(adminOnly, newCoupon)
+// app.post("/coupon/new", adminOnly, newCoupon);
 
 // route - /api/v1/payment/coupon/all
-app.get("/coupon/all", adminOnly, allCoupons);
+router.route("/coupon/all").get(adminOnly, allCoupons)
+// app.get("/coupon/all", adminOnly, allCoupons);
 
 // route - /api/v1/payment/coupon/:id
-app.delete("/coupon/:id", adminOnly, deleteCoupon);
+router.route("/coupon/:id").delete(adminOnly, deleteCoupon)
+// app.delete("/coupon/:id", adminOnly, deleteCoupon);
 
-export default app;
+export default router;

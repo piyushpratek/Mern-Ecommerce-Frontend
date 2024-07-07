@@ -1,4 +1,5 @@
 // import { stripe } from "../app.js";
+import { HttpStatus } from "../http-status.enum.js";
 import { catchAsyncErrors } from "../middlewares/error.js";
 import { Coupon } from "../models/coupon.js";
 import ErrorHandler from "../utils/utility-class.js";
@@ -23,11 +24,11 @@ export const newCoupon = catchAsyncErrors(async (req, res, next) => {
   const { coupon, amount } = req.body;
 
   if (!coupon || !amount)
-    return next(new ErrorHandler("Please enter both coupon and amount", 400));
+    return next(new ErrorHandler("Please enter both coupon and amount", HttpStatus.BAD_REQUEST));
 
   await Coupon.create({ code: coupon, amount });
 
-  return res.status(201).json({
+  return res.status(HttpStatus.CREATED).json({
     success: true,
     message: `Coupon ${coupon} Created Successfully`,
   });
@@ -38,9 +39,9 @@ export const applyDiscount = catchAsyncErrors(async (req, res, next) => {
 
   const discount = await Coupon.findOne({ code: coupon });
 
-  if (!discount) return next(new ErrorHandler("Invalid Coupon Code", 400));
+  if (!discount) return next(new ErrorHandler("Invalid Coupon Code", HttpStatus.BAD_REQUEST));
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     discount: discount.amount,
   });
@@ -49,7 +50,7 @@ export const applyDiscount = catchAsyncErrors(async (req, res, next) => {
 export const allCoupons = catchAsyncErrors(async (req, res, next) => {
   const coupons = await Coupon.find({});
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     coupons,
   });
@@ -60,9 +61,9 @@ export const deleteCoupon = catchAsyncErrors(async (req, res, next) => {
 
   const coupon = await Coupon.findByIdAndDelete(id);
 
-  if (!coupon) return next(new ErrorHandler("Invalid Coupon ID", 400));
+  if (!coupon) return next(new ErrorHandler("Invalid Coupon ID", HttpStatus.BAD_REQUEST));
 
-  return res.status(200).json({
+  return res.status(HttpStatus.OK).json({
     success: true,
     message: `Coupon ${coupon.code} Deleted Successfully`,
   });
