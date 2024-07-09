@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import NodeCache from "node-cache";
 // import morgan from "morgan";
-// import Stripe from "stripe";
+import Stripe from "stripe";
 // import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 // import { config } from "dotenv"
@@ -11,13 +11,15 @@ import productRoute from "./routes/products.js";
 import orderRoute from "./routes/order.js";
 import paymentRoute from "./routes/payment.js";
 import dashboardRoute from "./routes/stats.js";
+import { STRIPE_KEY } from "./config/config.js";
 
 // config({
 //     path: "./.env",
 // });
 
+const stripeKey = STRIPE_KEY
 
-// export const stripe = new Stripe(stripeKey);
+export const stripe = new Stripe(stripeKey);
 export const myCache = new NodeCache();
 
 const app: Application = express();

@@ -43,7 +43,13 @@ if (!process.env.MONGO_URI) {
   process.exit(1)
 }
 
+if (!process.env.STRIPE_KEY) {
+  logger.error('Please define STRIPE_KEY in your .env file.')
+  process.exit(1)
+}
+
 
 export const MONGO_URI = process.env.MONGO_URI
 export const NODE_ENV = process.env.NODE_ENV
 export const PORT = Number(process.env.PORT)
+export const STRIPE_KEY = process.env.STRIPE_KEY
