@@ -2,7 +2,7 @@ import express, { Application } from "express";
 import NodeCache from "node-cache";
 // import morgan from "morgan";
 import Stripe from "stripe";
-// import cors from "cors";
+import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 // import { config } from "dotenv"
 // Importing Routes
@@ -26,7 +26,7 @@ const app: Application = express();
 
 app.use(express.json());
 // app.use(morgan("dev"));
-// app.use(cors());
+app.use(cors());
 
 app.get("/", (req, res) => {
     res.send("API Working with /api/v1");

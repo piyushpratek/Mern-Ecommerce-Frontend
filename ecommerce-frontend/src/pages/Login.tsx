@@ -3,7 +3,9 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import { auth } from "../firebase";
-// import { getUser, useLoginMutation } from "../redux/api/userAPI";
+import { useLoginMutation } from "../redux/api/userAPI";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { MessageResponse } from "../types/api-types";
 // import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 // import { MessageResponse } from "../types/api-types";
 // import { userExist, userNotExist } from "../redux/reducer/userReducer";
@@ -14,7 +16,7 @@ const Login = () => {
   const [gender, setGender] = useState("");
   const [date, setDate] = useState("");
 
-  // const [login] = useLoginMutation();
+  const [login] = useLoginMutation();
 
   const loginHandler = async () => {
     try {
@@ -31,27 +33,27 @@ const Login = () => {
         _id: user.uid,
       });
 
-      // const res = await login({
-      //   name: user.displayName!,
-      //   email: user.email!,
-      //   photo: user.photoURL!,
-      //   gender,
-      //   role: "user",
-      //   dob: date,
-      //   _id: user.uid,
-      // });
+      const res = await login({
+        name: user.displayName!,
+        email: user.email!,
+        photo: user.photoURL!,
+        gender,
+        role: "user",
+        dob: date,
+        _id: user.uid,
+      });
 
-      // if ("data" in res) {
-      //   toast.success(res.data.message);
-      //   const data = await getUser(user.uid);
-      //   dispatch(userExist(data?.user!));
-      // }
-      //  else {
-      //   const error = res.error as FetchBaseQueryError;
-      //   const message = (error.data as MessageResponse).message;
-      //   toast.error(message);
-      //   dispatch(userNotExist());
-      // }
+      if ("data" in res) {
+        toast.success(res.data!.message);
+        // const data = await getUser(user.uid);
+        // useAppDispatch(userExist(data?.user!));
+      }
+      else {
+        const error = res.error as FetchBaseQueryError;
+        const message = (error.data as MessageResponse).message;
+        toast.error(message);
+        // useAppDispatch(userNotExist());
+      }
     } catch (error) {
       toast.error("Sign In Fail");
     }
