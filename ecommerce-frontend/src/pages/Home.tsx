@@ -1,15 +1,15 @@
-// import toast from "react-hot-toast";
+import toast from "react-hot-toast";
 // import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import ProductCard from "../components/Product-Card";
-// import { Skeleton } from "../components/loader";
+import { Skeleton } from "../components/Loader";
 // import ProductCard from "../components/product-card";
-// import { useLatestProductsQuery } from "../redux/api/productAPI";
+import { useLatestProductsQuery } from "../redux/api/productAPI";
 // import { addToCart } from "../redux/reducer/cartReducer";
 // import { CartItem } from "../types/types";
 
 const Home = () => {
-  // const { data, isLoading, isError } = useLatestProductsQuery("");
+  const { data, isLoading, isError } = useLatestProductsQuery("");
 
   // const dispatch = useDispatch();
 
@@ -21,7 +21,7 @@ const Home = () => {
   //   toast.success("Added to cart");
   // };
 
-  // if (isError) toast.error("Cannot Fetch the Products");
+  if (isError) toast.error("Cannot Fetch the Products");
 
   return (
     <div className="home">
@@ -35,17 +35,7 @@ const Home = () => {
       </h1>
 
       <main>
-        <ProductCard
-          // key={i._id}
-          productId="example"
-          name="Macbook"
-          price={450000}
-          stock={52}
-          handler={addToCartHandler}
-          photo="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wfGVufDB8fDB8fHww"
-        />
-
-        {/* {isLoading ? (
+        {isLoading ? (
           <Skeleton width="80vw" />
         ) : (
           data?.products.map((i) => (
@@ -59,7 +49,7 @@ const Home = () => {
               photo={i.photo}
             />
           ))
-        )} */}
+        )}
       </main>
     </div>
   );
