@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ProductCard from "../components/Product-Card";
 // import ProductCard from "../components/product-card";
-// import { useCategoriesQuery, useSearchProductsQuery, } from "../redux/api/productAPI";
+import { useCategoriesQuery, useSearchProductsQuery, } from "../redux/api/productAPI";
 // import { CustomError } from "../types/api-types";
 // import toast from "react-hot-toast";
 // import { Skeleton } from "../components/loader";
@@ -10,12 +10,12 @@ import ProductCard from "../components/Product-Card";
 // import { useDispatch } from "react-redux";
 
 const Search = () => {
-  // const {
-  //   data: categoriesResponse,
-  //   isLoading: loadingCategories,
-  //   isError,
-  //   error,
-  // } = useCategoriesQuery("");
+  const {
+    data: categoriesResponse,
+    isLoading: loadingCategories,
+    isError,
+    error,
+  } = useCategoriesQuery("");
 
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
