@@ -1,6 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import { useSelector } from "react-redux";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { Skeleton } from "../../../components/Loader";
@@ -9,11 +8,11 @@ import {
   useProductDetailsQuery,
   useUpdateProductMutation,
 } from "../../../redux/api/productAPI";
-import { RootState, server } from "../../../redux/store";
+import { RootState, server, useAppSelector } from "../../../redux/store";
 import { responseToast } from "../../../utils/features";
 
 const Productmanagement = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state: RootState) => state.userReducer);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -68,8 +67,8 @@ const Productmanagement = () => {
 
     const res = await updateProduct({
       formData,
-      userId: user?._id!,
-      productId: data?.product._id!,
+      userId: user!._id,
+      productId: data!.product._id,
     });
 
     responseToast(res, navigate, "/admin/product");
@@ -77,8 +76,8 @@ const Productmanagement = () => {
 
   const deleteHandler = async () => {
     const res = await deleteProduct({
-      userId: user?._id!,
-      productId: data?.product._id!,
+      userId: user!._id,
+      productId: data!.product._id,
     });
 
     responseToast(res, navigate, "/admin/product");

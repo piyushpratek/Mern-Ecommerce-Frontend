@@ -1,13 +1,12 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useNewProductMutation } from "../../../redux/api/productAPI";
-import { RootState } from "../../../redux/store";
+import { RootState, useAppSelector } from "../../../redux/store";
 import { responseToast } from "../../../utils/features";
 
 const NewProduct = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state: RootState) => state.userReducer);
 
   const [name, setName] = useState<string>("");
   const [category, setCategory] = useState<string>("");
@@ -48,7 +47,7 @@ const NewProduct = () => {
     formData.set("photo", photo);
     formData.set("category", category);
 
-    const res = await newProduct({ id: user?._id!, formData });
+    const res = await newProduct({ id: user!._id, formData });
 
     responseToast(res, navigate, "/admin/product");
   };
