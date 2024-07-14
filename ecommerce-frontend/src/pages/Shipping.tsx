@@ -5,15 +5,15 @@ import { BiArrowBack } from "react-icons/bi";
 // import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 // import { saveShippingInfo } from "../redux/reducer/cartReducer";
-// import { RootState, server } from "../redux/store";
+import { RootState, useAppSelector } from "../redux/store";
 
 const Shipping = () => {
-  // const { cartItems, total } = useSelector(
-  //   (state: RootState) => state.cartReducer
-  // );
+  const { cartItems, total } = useAppSelector(
+    (state: RootState) => state.cartReducer
+  );
 
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  // const dispatch = useAppDispatch();
 
   const [shippingInfo, setShippingInfo] = useState({
     address: "",
@@ -56,9 +56,9 @@ const Shipping = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (cartItems.length <= 0) return navigate("/cart");
-  // }, [cartItems]);
+  useEffect(() => {
+    if (cartItems.length <= 0) return navigate("/cart");
+  }, [cartItems, navigate]);
 
   return (
     <div className="shipping">
