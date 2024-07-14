@@ -1,5 +1,4 @@
 import { FaTrash } from "react-icons/fa";
-import { useSelector } from "react-redux";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { Skeleton } from "../../../components/Loader";
@@ -8,7 +7,7 @@ import {
   useOrderDetailsQuery,
   useUpdateOrderMutation,
 } from "../../../redux/api/orderAPI";
-import { RootState, server } from "../../../redux/store";
+import { RootState, server, useAppSelector } from "../../../redux/store";
 import { Order, OrderItem } from "../../../types/types";
 import { responseToast } from "../../../utils/features";
 
@@ -32,7 +31,7 @@ const defaultData: Order = {
 };
 
 const TransactionManagement = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state: RootState) => state.userReducer);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -56,16 +55,16 @@ const TransactionManagement = () => {
 
   const updateHandler = async () => {
     const res = await updateOrder({
-      userId: user?._id!,
-      orderId: data?.order._id!,
+      userId: user!._id,
+      orderId: data!.order._id,
     });
     responseToast(res, navigate, "/admin/transaction");
   };
 
   const deleteHandler = async () => {
     const res = await deleteOrder({
-      userId: user?._id!,
-      orderId: data?.order._id!,
+      userId: user!._id,
+      orderId: data!.order._id,
     });
     responseToast(res, navigate, "/admin/transaction");
   };
