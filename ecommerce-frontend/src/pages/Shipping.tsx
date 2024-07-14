@@ -1,11 +1,10 @@
-// import axios from "axios";
+import axios from "axios";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BiArrowBack } from "react-icons/bi";
-// import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import { saveShippingInfo } from "../redux/reducer/cartReducer";
-import { RootState, useAppSelector } from "../redux/store";
+import { saveShippingInfo } from "../redux/reducer/cartReducer";
+import { RootState, server, useAppDispatch, useAppSelector } from "../redux/store";
 
 const Shipping = () => {
   const { cartItems, total } = useAppSelector(
@@ -13,7 +12,7 @@ const Shipping = () => {
   );
 
   const navigate = useNavigate();
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const [shippingInfo, setShippingInfo] = useState({
     address: "",
@@ -32,23 +31,23 @@ const Shipping = () => {
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // dispatch(saveShippingInfo(shippingInfo));
+    dispatch(saveShippingInfo(shippingInfo));
 
     try {
-      // const { data } = await axios.post(
-      //   `${server}/api/v1/payment/create`,
-      //   {
-      //     amount: total,
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
+      const { data } = await axios.post(
+        `${server}/api/v1/payment/create`,
+        {
+          amount: total,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       navigate("/pay", {
-        // state: data.clientSecret,
+        state: data.clientSecret,
       });
     } catch (error) {
       console.log(error);
