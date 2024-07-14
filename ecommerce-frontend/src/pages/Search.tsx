@@ -1,13 +1,12 @@
 import { useState } from "react";
-import ProductCard from "../components/Product-Card";
-// import ProductCard from "../components/product-card";
-import { useCategoriesQuery, useSearchProductsQuery, } from "../redux/api/productAPI";
-import { useAppDispatch } from "../redux/store";
-import { CustomError } from "../types/api-types";
 import toast from "react-hot-toast";
 import { Skeleton } from "../components/Loader";
-// import { CartItem } from "../types/types";
-// import { addToCart } from "../redux/reducer/cartReducer";
+import ProductCard from "../components/Product-Card";
+import { useCategoriesQuery, useSearchProductsQuery, } from "../redux/api/productAPI";
+import { addToCart } from "../redux/reducer/cartReducer";
+import { useAppDispatch } from "../redux/store";
+import { CustomError } from "../types/api-types";
+import { CartItem } from "../types/types";
 
 const Search = () => {
   const {
@@ -38,13 +37,11 @@ const Search = () => {
 
   const dispatch = useAppDispatch();
 
-  // const addToCartHandler = (cartItem: CartItem) => {
-  //   if (cartItem.stock < 1) return toast.error("Out of Stock");
-  //   dispatch(addToCart(cartItem));
-  //   toast.success("Added to cart");
-  // };
-
-  const addToCartHandler = () => { }
+  const addToCartHandler = (cartItem: CartItem) => {
+    if (cartItem.stock < 1) return toast.error("Out of Stock");
+    dispatch(addToCart(cartItem));
+    toast.success("Added to cart");
+  };
 
   const isPrevPage = page > 1;
   const isNextPage = page < 4;

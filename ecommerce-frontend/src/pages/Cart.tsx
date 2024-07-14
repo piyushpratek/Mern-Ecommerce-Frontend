@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { VscError } from "react-icons/vsc";
 import { Link } from "react-router-dom";
+import CartItemCard from "../components/Cart-Item";
 import {
   addToCart,
   calculatePrice,
@@ -9,7 +10,6 @@ import {
   removeCartItem,
 } from "../redux/reducer/cartReducer";
 import { RootState, server, useAppDispatch, useAppSelector } from "../redux/store";
-import CartItemCard from "../components/Cart-Item";
 import { CartItem } from "../types/types";
 
 const Cart = () => {
@@ -60,11 +60,11 @@ const Cart = () => {
       cancel();
       setIsValidCouponCode(false);
     };
-  }, [couponCode]);
+  }, [couponCode, dispatch]);
 
   useEffect(() => {
     dispatch(calculatePrice());
-  }, [cartItems]);
+  }, [cartItems, dispatch]);
 
   return (
     <div className="cart">
