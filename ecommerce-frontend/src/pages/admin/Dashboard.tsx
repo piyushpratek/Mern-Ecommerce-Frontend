@@ -2,14 +2,13 @@ import { BiMaleFemale } from "react-icons/bi";
 import { BsSearch } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
 import { HiTrendingDown, HiTrendingUp } from "react-icons/hi";
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { BarChart, DoughnutChart } from "../../components/admin/Charts";
 import Table from "../../components/admin/DashboardTable";
 import { Skeleton } from "../../components/Loader";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
-import { RootState } from "../../redux/store";
+import { RootState, useAppSelector } from "../../redux/store";
 import { getLastMonths } from "../../utils/features";
 
 const userImg =
@@ -18,11 +17,11 @@ const userImg =
 const { last6Months: months } = getLastMonths();
 
 const Dashboard = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state: RootState) => state.userReducer);
 
-  const { isLoading, data, isError } = useStatsQuery(user?._id!);
+  const { isLoading, data, isError } = useStatsQuery(user!._id);
 
-  const stats = data?.stats!;
+  const stats = data?.stats;
 
   if (isError) return <Navigate to={"/"} />;
 
@@ -43,28 +42,28 @@ const Dashboard = () => {
 
             <section className="widget-container">
               <WidgetItem
-                percent={stats.changePercent.revenue}
+                percent={stats?.changePercent?.revenue ?? 0}
                 amount={true}
-                value={stats.count.revenue}
+                value={stats?.count?.revenue ?? 0}
                 heading="Revenue"
                 color="rgb(0, 115, 255)"
               />
               <WidgetItem
-                percent={stats.changePercent.user}
-                value={stats.count.user}
+                percent={stats?.changePercent?.user ?? 0}
+                value={stats?.count?.user ?? 0}
                 color="rgb(0 198 202)"
                 heading="Users"
               />
               <WidgetItem
-                percent={stats.changePercent.order}
-                value={stats.count.order}
+                percent={stats?.changePercent?.order ?? 0}
+                value={stats?.count?.order ?? 0}
                 color="rgb(255 196 0)"
                 heading="Transactions"
               />
 
               <WidgetItem
-                percent={stats.changePercent.product}
-                value={stats.count.product}
+                percent={stats?.changePercent?.product ?? 0}
+                value={stats?.count?.product ?? 0}
                 color="rgb(76 0 255)"
                 heading="Products"
               />
@@ -75,8 +74,8 @@ const Dashboard = () => {
                 <h2>Revenue & Transaction</h2>
                 <BarChart
                   labels={months}
-                  data_1={stats.chart.revenue}
-                  data_2={stats.chart.order}
+                  data_1={stats?.chart?.revenue ?? []}
+                  data_2={stats?.chart?.order ?? []}
                   title_1="Revenue"
                   title_2="Transaction"
                   bgColor_1="rgb(0, 115, 255)"
@@ -88,7 +87,7 @@ const Dashboard = () => {
                 <h2>Inventory</h2>
 
                 <div>
-                  {stats.categoryCount.map((i) => {
+                  {stats?.categoryCount?.map((i) => {
                     const [heading, value] = Object.entries(i)[0];
                     return (
                       <CategoryItem
@@ -108,7 +107,7 @@ const Dashboard = () => {
                 <h2>Gender Ratio</h2>
                 <DoughnutChart
                   labels={["Female", "Male"]}
-                  data={[stats.userRatio.female, stats.userRatio.male]}
+                  data={[stats?.userRatio?.female ?? 0, stats?.userRatio?.male ?? 0]}
                   backgroundColor={[
                     "hsl(340, 82%, 56%)",
                     "rgba(53, 162, 235, 0.8)",
@@ -119,7 +118,7 @@ const Dashboard = () => {
                   <BiMaleFemale />
                 </p>
               </div>
-              <Table data={stats.latestTransaction} />
+              <Table data={stats?.latestTransaction ?? []} />
             </section>
           </>
         )}
