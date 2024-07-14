@@ -1,7 +1,6 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaTrash } from "react-icons/fa";
-import { useSelector } from "react-redux";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
@@ -10,7 +9,7 @@ import {
   useAllUsersQuery,
   useDeleteUserMutation,
 } from "../../redux/api/userAPI";
-import { RootState } from "../../redux/store";
+import { RootState, useAppSelector } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
 import { responseToast } from "../../utils/features";
 
@@ -51,23 +50,38 @@ const columns: Column<DataType>[] = [
 ];
 
 const Customers = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state: RootState) => state.userReducer);
 
-  const { isLoading, data, isError, error } = useAllUsersQuery(user?._id!);
+  const { isLoading, data, isError, error } = useAllUsersQuery(user!._id);
 
   const [rows, setRows] = useState<DataType[]>([]);
 
   const [deleteUser] = useDeleteUserMutation();
 
-  const deleteHandler = async (userId: string) => {
-    const res = await deleteUser({ userId, adminUserId: user?._id! });
-    responseToast(res, null, "");
-  };
+  // const deleteHandler = async (userId: string) => {
+  //   const res = await deleteUser({ userId, adminUserId: user!._id });
+  //   responseToast(res, null, "");
+  // };
 
-  if (isError) {
-    const err = error as CustomError;
-    toast.error(err.data.message);
-  }
+  // if (isError) {
+  //   const err = error as CustomError;
+  //   toast.error(err.data.message);
+  // }
+
+  const deleteHandler = useCallback(
+    async (userId: string) => {
+      const res = await deleteUser({ userId, adminUserId: user!._id });
+      responseToast(res, null, "");
+    },
+    [deleteUser, user]
+  );
+
+  useEffect(() => {
+    if (isError) {
+      const err = error as CustomError;
+      toast.error(err.data.message);
+    }
+  }, [isError, error]);
 
   useEffect(() => {
     if (data)
@@ -93,7 +107,7 @@ const Customers = () => {
           ),
         }))
       );
-  }, [data]);
+  }, [data, deleteHandler]);
 
   const Table = TableHOC<DataType>(
     columns,
