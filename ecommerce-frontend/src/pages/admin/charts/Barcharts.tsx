@@ -1,7 +1,6 @@
-import { useSelector } from "react-redux";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { BarChart } from "../../../components/admin/Charts";
-import { RootState } from "../../../redux/store";
+import { RootState, useAppSelector } from "../../../redux/store";
 import { useBarQuery } from "../../../redux/api/dashboardAPI";
 import { CustomError } from "../../../types/api-types";
 import toast from "react-hot-toast";
@@ -11,9 +10,9 @@ import { getLastMonths } from "../../../utils/features";
 const { last12Months, last6Months } = getLastMonths();
 
 const Barcharts = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state: RootState) => state.userReducer);
 
-  const { isLoading, data, error, isError } = useBarQuery(user?._id!);
+  const { isLoading, data, error, isError } = useBarQuery(user!._id!);
 
   const products = data?.charts.products || [];
   const orders = data?.charts.orders || [];
