@@ -9,7 +9,7 @@ import { Product } from "../models/product.js";
 import ErrorHandler from "../utils/utility-class.js";
 import { rm } from "fs";
 import { myCache } from "../app.js";
-import { invalidateCache } from "../utils/features.js";
+import { invalidateCache, uploadToCloudinary } from "../utils/features.js";
 import { HttpStatus } from "../http-status.enum.js";
 // import { faker } from "@faker-js/faker";
 
@@ -87,24 +87,31 @@ export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 export const newProduct = catchAsyncErrors(
   async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
     const { name, price, stock, category } = req.body;
-    const photo = req.file;
 
-    if (!photo) return next(new ErrorHandler("Please add Photo", HttpStatus.BAD_REQUEST));
+    const photos = req.files as Express.Multer.File[] | undefined;
+
+    if (!photos) return next(new ErrorHandler("Please add Photo", HttpStatus.BAD_REQUEST));
+
+    if (photos.length < 1)
+      return next(new ErrorHandler("Please add atleast one Photo", HttpStatus.BAD_REQUEST));
+
+    if (photos.length > 5)
+      return next(new ErrorHandler("You can only upload 5 Photos", HttpStatus.BAD_REQUEST));
 
     if (!name || !price || !stock || !category) {
-      rm(photo.path, () => {
-        console.log("Deleted");
-      });
-
       return next(new ErrorHandler("Please enter All Fields", HttpStatus.BAD_REQUEST));
     }
+
+    // Upload Here
+
+    const photosURL = await uploadToCloudinary(photos);
 
     await Product.create({
       name,
       price,
       stock,
       category: category.toLowerCase(),
-      photo: photo.path,
+      photos: photosURL,
     });
 
     invalidateCache({ product: true, admin: true });
@@ -115,6 +122,7 @@ export const newProduct = catchAsyncErrors(
     });
   }
 );
+
 
 export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;

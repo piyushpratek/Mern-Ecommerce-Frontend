@@ -10,14 +10,12 @@ import {
   newProduct,
   updateProduct,
 } from "../controllers/product.js";
-import { singleUpload } from "../middlewares/multer.js";
+import { mutliUpload, singleUpload } from "../middlewares/multer.js";
 
 const router = express.Router();
 
 //To Create New Product  - /api/v1/product/new
-// app.post("/new", adminOnly, singleUpload, newProduct);
-router.route("/new").post(adminOnly, singleUpload, newProduct)
-// app.post("/new", adminOnly, newProduct);
+router.route("/new").post(adminOnly, mutliUpload, newProduct)
 
 //To get all Products with filters  - /api/v1/product/all
 router.route("/all").get(getAllProducts)

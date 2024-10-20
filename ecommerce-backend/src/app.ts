@@ -5,7 +5,6 @@ import Stripe from "stripe";
 import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 // import { config } from "dotenv"
-import { v2 as cloudinary } from "cloudinary";
 
 // Importing Routes
 import userRoute from "./routes/user.js";
@@ -21,11 +20,7 @@ import { STRIPE_KEY } from "./config/config.js";
 
 const stripeKey = STRIPE_KEY
 
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_API_KEY,
-    api_secret: process.env.CLOUD_API_SECRET,
-});
+
 
 export const stripe = new Stripe(stripeKey);
 export const myCache = new NodeCache();
