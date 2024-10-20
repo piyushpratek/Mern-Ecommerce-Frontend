@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.2.6",
     "@stripe/react-stripe-js": "^2.7.3",
     "@stripe/stripe-js": "^4.1.0",
+    "6pp": "^1.2.16",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
     "firebase": "^10.12.1",
