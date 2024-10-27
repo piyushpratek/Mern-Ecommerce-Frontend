@@ -120,10 +120,13 @@ export const newProduct = catchAsyncErrors(
     try {
       // Attempt to upload photos
       // photosURL = await uploadToCloudinary(photos);
+
+      //attempting 2 requests for cloudinary bcoz first attempts keeps failing on my system
       try {
         const result = await cloudinary.v2.uploader.upload(photos[0].path, {
           folder: 'products',
           resource_type: 'image',
+          // providing public id so that it replaces the same file if being uploaded otherwise duplicates will be created if the first request is also successfull -- on other computers
           public_id: 'sample'
         })
       } catch (error) {
@@ -136,6 +139,7 @@ export const newProduct = catchAsyncErrors(
           resource_type: 'image',
         })
         await sleep(1_000)
+        //one file is being deleted when server is stopped or refresh 
         fs.unlinkSync(photos[i].path)
       }
     } catch (error) {
