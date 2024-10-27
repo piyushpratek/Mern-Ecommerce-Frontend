@@ -9,9 +9,10 @@ import { Product } from "../models/product";
 import ErrorHandler from "../utils/utility-class";
 import { rm } from "fs";
 import { myCache } from "../app";
-import { invalidateCache, uploadToCloudinary } from "../utils/features";
+import { invalidateCache, sleep } from "../utils/features";
 import { HttpStatus } from "../http-status.enum";
 import cloudinary from 'cloudinary'
+import fs from 'fs'
 
 // import { faker } from "@faker-js/faker";
 
@@ -119,14 +120,23 @@ export const newProduct = catchAsyncErrors(
     try {
       // Attempt to upload photos
       // photosURL = await uploadToCloudinary(photos);
+      try {
+        const result = await cloudinary.v2.uploader.upload(photos[0].path, {
+          folder: 'products',
+          resource_type: 'image',
+          public_id: 'sample'
+        })
+      } catch (error) {
 
-
-
+      }
+      await sleep(5_000)
       for (let i = 0; i < photos.length; i++) {
         const result = await cloudinary.v2.uploader.upload(photos[i].path, {
           folder: 'products',
           resource_type: 'image',
         })
+        await sleep(1_000)
+        fs.unlinkSync(photos[i].path)
       }
     } catch (error) {
       // Log the error and return a proper message
