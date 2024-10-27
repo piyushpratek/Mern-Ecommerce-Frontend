@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import { MONGO_URI } from './config.js'
-import logger from './logger.js'
+import { MONGO_URI } from './config'
+import logger from './logger'
 
 export default {
   mongoose,

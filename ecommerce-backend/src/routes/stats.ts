@@ -1,11 +1,11 @@
 import express from "express";
-import { adminOnly } from "../middlewares/auth.js";
+import { adminOnly } from "../middlewares/auth";
 import {
   getBarCharts,
   getDashboardStats,
   getLineCharts,
   getPieCharts,
-} from "../controllers/stats.js";
+} from "../controllers/stats";
 
 const router = express.Router();
 

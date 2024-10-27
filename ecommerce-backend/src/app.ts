@@ -3,17 +3,17 @@ import NodeCache from "node-cache";
 // import morgan from "morgan";
 import Stripe from "stripe";
 import cors from "cors";
-import { errorMiddleware } from "./middlewares/error.js";
+import { errorMiddleware } from "./middlewares/error";
 // import { config } from "dotenv"
 
 
 // Importing Routes
-import userRoute from "./routes/user.js";
-import productRoute from "./routes/products.js";
-import orderRoute from "./routes/order.js";
-import paymentRoute from "./routes/payment.js";
-import dashboardRoute from "./routes/stats.js";
-import { STRIPE_KEY } from "./config/config.js";
+import userRoute from "./routes/user";
+import productRoute from "./routes/products";
+import orderRoute from "./routes/order";
+import paymentRoute from "./routes/payment";
+import dashboardRoute from "./routes/stats";
+import { STRIPE_KEY } from "./config/config";
 
 // config({
 //     path: "./.env",

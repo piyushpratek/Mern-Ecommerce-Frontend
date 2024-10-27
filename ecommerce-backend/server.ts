@@ -1,7 +1,7 @@
-import app from './app.js'
-import { CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_NAME, PORT } from './config/config.js'
-import logger from './config/logger.js'
-import connectDB from './config/database.js'
+import app from './src/app'
+import { CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_NAME, PORT } from './src/config/config'
+import logger from './src/config/logger'
+import connectDB from './src/config/database'
 import { v2 as cloudinary } from "cloudinary";
 
 // Handling uncaught Exception

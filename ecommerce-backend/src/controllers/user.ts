@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { User } from "../models/user.js";
-import { NewUserRequestBody } from "../types/types.js";
-import { catchAsyncErrors } from "../middlewares/error.js";
-import ErrorHandler from "../utils/utility-class.js";
-import { HttpStatus } from "../http-status.enum.js";
+import { User } from "../models/user";
+import { NewUserRequestBody } from "../types/types";
+import { catchAsyncErrors } from "../middlewares/error";
+import ErrorHandler from "../utils/utility-class";
+import { HttpStatus } from "../http-status.enum";
 
 export const newUser = catchAsyncErrors(
   async (

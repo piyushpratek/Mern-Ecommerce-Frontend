@@ -1,14 +1,14 @@
-import { myCache } from "../app.js";
-import { HttpStatus } from "../http-status.enum.js";
-import { catchAsyncErrors } from "../middlewares/error.js";
-import { Order } from "../models/order.js";
-import { Product } from "../models/product.js";
-import { User } from "../models/user.js";
+import { myCache } from "../app";
+import { HttpStatus } from "../http-status.enum";
+import { catchAsyncErrors } from "../middlewares/error";
+import { Order } from "../models/order";
+import { Product } from "../models/product";
+import { User } from "../models/user";
 import {
   calculatePercentage,
   getChartData,
   getInventories,
-} from "../utils/features.js";
+} from "../utils/features";
 
 export const getDashboardStats = catchAsyncErrors(async (req, res, next) => {
   let stats = {};

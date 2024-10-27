@@ -1,5 +1,5 @@
 import express from "express";
-import { adminOnly } from "../middlewares/auth.js";
+import { adminOnly } from "../middlewares/auth";
 import {
   deleteProduct,
   getAdminProducts,
@@ -9,8 +9,8 @@ import {
   getlatestProducts,
   newProduct,
   updateProduct,
-} from "../controllers/product.js";
-import { mutliUpload, singleUpload } from "../middlewares/multer.js";
+} from "../controllers/product";
+import { mutliUpload, singleUpload } from "../middlewares/multer";
 
 const router = express.Router();
 

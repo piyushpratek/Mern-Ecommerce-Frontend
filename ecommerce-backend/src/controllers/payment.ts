@@ -1,8 +1,8 @@
-import { stripe } from "../app.js";
-import { HttpStatus } from "../http-status.enum.js";
-import { catchAsyncErrors } from "../middlewares/error.js";
-import { Coupon } from "../models/coupon.js";
-import ErrorHandler from "../utils/utility-class.js";
+import { stripe } from "../app";
+import { HttpStatus } from "../http-status.enum";
+import { catchAsyncErrors } from "../middlewares/error";
+import { Coupon } from "../models/coupon";
+import ErrorHandler from "../utils/utility-class";
 
 export const createPaymentIntent = catchAsyncErrors(async (req, res, next) => {
   const { amount } = req.body;

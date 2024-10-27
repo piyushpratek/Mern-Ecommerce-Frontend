@@ -1,7 +1,7 @@
 import { Document } from "mongoose";
-import { myCache } from "../app.js";
-import { Product } from "../models/product.js";
-import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
+import { myCache } from "../app";
+import { Product } from "../models/product";
+import { InvalidateCacheProps, OrderItemType } from "../types/types";
 import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
 
 

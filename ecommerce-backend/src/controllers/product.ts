@@ -1,16 +1,18 @@
 import { Request } from "express";
-import { catchAsyncErrors } from "../middlewares/error.js";
+import { catchAsyncErrors } from "../middlewares/error";
 import {
   BaseQuery,
   NewProductRequestBody,
   SearchRequestQuery,
-} from "../types/types.js";
-import { Product } from "../models/product.js";
-import ErrorHandler from "../utils/utility-class.js";
+} from "../types/types";
+import { Product } from "../models/product";
+import ErrorHandler from "../utils/utility-class";
 import { rm } from "fs";
-import { myCache } from "../app.js";
-import { invalidateCache, uploadToCloudinary } from "../utils/features.js";
-import { HttpStatus } from "../http-status.enum.js";
+import { myCache } from "../app";
+import { invalidateCache, uploadToCloudinary } from "../utils/features";
+import { HttpStatus } from "../http-status.enum";
+import cloudinary from 'cloudinary'
+
 // import { faker } from "@faker-js/faker";
 
 
@@ -93,6 +95,7 @@ export const newProduct = catchAsyncErrors(
     const { name, price, stock, category } = req.body;
 
     const photos = req.files as Express.Multer.File[] | undefined;
+
     console.log('Photos received for upload:', photos);
 
 
@@ -115,7 +118,16 @@ export const newProduct = catchAsyncErrors(
     let photosURL;
     try {
       // Attempt to upload photos
-      photosURL = await uploadToCloudinary(photos);
+      // photosURL = await uploadToCloudinary(photos);
+
+
+
+      for (let i = 0; i < photos.length; i++) {
+        const result = await cloudinary.v2.uploader.upload(photos[i].path, {
+          folder: 'products',
+          resource_type: 'image',
+        })
+      }
     } catch (error) {
       // Log the error and return a proper message
       console.error('Cloudinary Upload Error:', error);

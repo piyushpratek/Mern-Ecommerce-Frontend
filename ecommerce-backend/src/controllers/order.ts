@@ -1,11 +1,11 @@
 import { Request } from "express";
-import { catchAsyncErrors } from "../middlewares/error.js";
-import { NewOrderRequestBody } from "../types/types.js";
-import { Order } from "../models/order.js";
-import { invalidateCache, reduceStock } from "../utils/features.js";
-import ErrorHandler from "../utils/utility-class.js";
-import { HttpStatus } from "../http-status.enum.js";
-import { myCache } from "../app.js";
+import { catchAsyncErrors } from "../middlewares/error";
+import { NewOrderRequestBody } from "../types/types";
+import { Order } from "../models/order";
+import { invalidateCache, reduceStock } from "../utils/features";
+import ErrorHandler from "../utils/utility-class";
+import { HttpStatus } from "../http-status.enum";
+import { myCache } from "../app";
 
 export const myOrders = catchAsyncErrors(async (req, res, next) => {
   const { id: user } = req.query;
