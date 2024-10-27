@@ -86,9 +86,15 @@ export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 
 export const newProduct = catchAsyncErrors(
   async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
+    // Log body and files to check
+    console.log('Files:', req.files); // Should show an array of file objects
+    console.log('Body:', req.body);   // Should show other fields (name, price, etc.)
+
     const { name, price, stock, category } = req.body;
 
     const photos = req.files as Express.Multer.File[] | undefined;
+    console.log('Photos received for upload:', photos);
+
 
     if (!photos) return next(new ErrorHandler("Please add Photo", HttpStatus.BAD_REQUEST));
 
@@ -104,7 +110,18 @@ export const newProduct = catchAsyncErrors(
 
     // Upload Here
 
-    const photosURL = await uploadToCloudinary(photos);
+    // const photosURL = await uploadToCloudinary(photos);
+
+    let photosURL;
+    try {
+      // Attempt to upload photos
+      photosURL = await uploadToCloudinary(photos);
+    } catch (error) {
+      // Log the error and return a proper message
+      console.error('Cloudinary Upload Error:', error);
+      return next(new ErrorHandler("Failed to upload photos", HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
 
     await Product.create({
       name,

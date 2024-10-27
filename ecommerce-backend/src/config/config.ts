@@ -48,8 +48,25 @@ if (!process.env.STRIPE_KEY) {
   process.exit(1)
 }
 
+if (!process.env.CLOUDINARY_NAME) {
+  logger.error('Please define CLOUDINARY_NAME in your .env file.')
+  process.exit(1)
+}
+
+if (!process.env.CLOUDINARY_API_KEY) {
+  logger.error('Please define CLOUDINARY_API_KEY in your .env file.')
+  process.exit(1)
+}
+
+if (!process.env.CLOUDINARY_API_SECRET) {
+  logger.error('Please define CLOUDINARY_API_SECRET in your .env file.')
+  process.exit(1)
+}
 
 export const MONGO_URI = process.env.MONGO_URI
 export const NODE_ENV = process.env.NODE_ENV
-export const PORT = Number(process.env.PORT)
+export const PORT = Number(process.env.PORT) || 4000; // Default to 4000
 export const STRIPE_KEY = process.env.STRIPE_KEY
+export const CLOUDINARY_NAME = process.env.CLOUDINARY_NAME
+export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY
+export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET

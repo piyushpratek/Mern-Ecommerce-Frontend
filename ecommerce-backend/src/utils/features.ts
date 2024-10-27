@@ -4,6 +4,7 @@ import { Product } from "../models/product.js";
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
 import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
 
+
 const getBase64 = (file: Express.Multer.File) =>
   `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
 
@@ -24,6 +25,8 @@ export const uploadToCloudinary = async (files: Express.Multer.File[]) => {
     url: i.secure_url,
   }));
 };
+
+
 
 export const invalidateCache = ({
   product,
