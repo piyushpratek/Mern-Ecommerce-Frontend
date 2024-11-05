@@ -12,6 +12,7 @@ import { RootState, useAppDispatch, useAppSelector } from "./redux/store";
 
 const Home = lazy(() => import("./pages/Home"));
 const Search = lazy(() => import("./pages/Search"));
+const ProductDetails = lazy(() => import("./pages/Product-Details"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Shipping = lazy(() => import("./pages/Shipping"));
 const Login = lazy(() => import("./pages/Login"));
@@ -69,6 +70,7 @@ const App = () => {
 
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           {/* Not Logged in Route  */}
           <Route path="/login" element={
