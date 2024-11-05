@@ -159,16 +159,36 @@ export const newProduct = catchAsyncErrors(
 export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const { name, price, stock, category } = req.body;
-  const photo = req.file;
   const product = await Product.findById(id);
 
   if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
 
-  if (photo) {
-    rm(product.photo!, () => {
-      console.log("Old Photo Deleted");
-    });
-    product.photo = photo.path;
+  // Handle photos array for the update
+  const photos = req.files as Express.Multer.File[] | undefined;
+
+  if (photos && photos.length > 0) {
+    // Clear existing images from Cloudinary and DocumentArray
+    for (const existingPhoto of product.photos) {
+      await cloudinary.v2.uploader.destroy(existingPhoto.public_id);
+    }
+    product.photos.splice(0, product.photos.length); // Clear existing photos in the DocumentArray
+
+    // Upload new photos to Cloudinary and add to DocumentArray
+    for (let i = 0; i < photos.length; i++) {
+      const result = await cloudinary.v2.uploader.upload(photos[i].path, {
+        folder: "products",
+        resource_type: "image",
+      });
+
+      // Push new photo into the DocumentArray with required structure
+      product.photos.push({
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+
+      // Delete temporary uploaded files from server
+      fs.unlinkSync(photos[i].path);
+    }
   }
 
   if (name) product.name = name;
