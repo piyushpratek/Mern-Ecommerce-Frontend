@@ -19,6 +19,13 @@ a {
   color: black;
 }
 
+button {
+  &:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.5;
+  }
+}
+
 $color1: white;
 $color2: rgb(46, 46, 46);
 $color3: rgb(0, 104, 136);
@@ -33,17 +40,17 @@ $color3: rgb(0, 104, 136);
   color: rgb(0, 195, 0);
 }
 
-@import "admin-styles/mixin";
-@import "home";
-@import "cart";
-@import "shipping";
-@import "login";
-@import "search";
-@import "admin-styles/dashboard";
-@import "admin-styles/products";
-@import "admin-styles/chart";
-@import "admin-styles/dashboardapp";
-@import "admin-styles/mediaquery";
+@import 'admin-styles/mixin';
+@import 'home';
+@import 'cart';
+@import 'shipping';
+@import 'login';
+@import 'search';
+@import 'admin-styles/dashboard';
+@import 'admin-styles/products';
+@import 'admin-styles/chart';
+@import 'admin-styles/dashboardapp';
+@import 'admin-styles/mediaquery';
 
 .container {
   max-width: 1367px;

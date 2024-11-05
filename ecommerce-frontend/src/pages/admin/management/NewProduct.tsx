@@ -9,6 +9,8 @@ import { useFileHandler } from "6pp";
 const NewProduct = () => {
   const { user } = useAppSelector((state: RootState) => state.userReducer);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [name, setName] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [price, setPrice] = useState<number>(1000);
@@ -21,25 +23,32 @@ const NewProduct = () => {
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true)
+    try {
+      if (!name || !price || stock < 0 || !category) return;
 
-    if (!name || !price || stock < 0 || !category) return;
+      if (!photos.file || photos.file.length === 0) return;
 
-    if (!photos.file || photos.file.length === 0) return;
+      const formData = new FormData();
 
-    const formData = new FormData();
+      formData.set("name", name);
+      formData.set("price", price.toString());
+      formData.set("stock", stock.toString());
+      formData.set("category", category);
 
-    formData.set("name", name);
-    formData.set("price", price.toString());
-    formData.set("stock", stock.toString());
-    formData.set("category", category);
+      photos.file.forEach((file) => {
+        formData.append("photos", file);
+      });
 
-    photos.file.forEach((file) => {
-      formData.append("photos", file);
-    });
+      const res = await newProduct({ id: user!._id, formData });
 
-    const res = await newProduct({ id: user!._id, formData });
+      responseToast(res, navigate, "/admin/product");
 
-    responseToast(res, navigate, "/admin/product");
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -92,8 +101,8 @@ const NewProduct = () => {
             </div>
 
             <div>
-              <label>Photo</label>
-              <input required type="file" multiple onChange={photos.changeHandler} />
+              <label>Photos</label>
+              <input required type="file" accept="image/*" multiple onChange={photos.changeHandler} />
             </div>
 
             {photos.error && <p>{photos.error}</p>}
@@ -103,7 +112,7 @@ const NewProduct = () => {
                 <img key={i} src={img} alt="New Image" />
               ))}
 
-            <button type="submit">Create</button>
+            <button disabled={isLoading} type="submit">Create</button>
           </form>
         </article>
       </main>
