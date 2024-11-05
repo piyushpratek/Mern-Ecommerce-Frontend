@@ -1,10 +1,12 @@
 import { FaPlus } from "react-icons/fa";
-import { server } from "../redux/store";
 import { CartItem } from "../types/types";
 
 type ProductsProps = {
   productId: string;
-  photo: string;
+  photos: {
+    url: string;
+    public_id: string
+  }[];
   name: string;
   price: number;
   stock: number;
@@ -17,20 +19,21 @@ const ProductCard = ({
   productId,
   price,
   name,
-  photo,
+  photos,
   stock,
   handler,
 }: ProductsProps) => {
+
   return (
     <div className="product-card">
-      <img src={`${server}/${photo}`} alt={name} />
+      <img src={photos?.[0]?.url} alt={name} />
       <p>{name}</p>
       <span>₹{price}</span>
 
       <div>
         <button
           onClick={() =>
-            handler({ productId, price, name, photo, stock, quantity: 1 })
+            handler({ productId, price, name, photo: photos[0].url, stock, quantity: 1 })
           }
         >
           <FaPlus />

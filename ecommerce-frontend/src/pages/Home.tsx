@@ -9,6 +9,7 @@ import { CartItem } from "../types/types";
 
 const Home = () => {
   const { data, isLoading, isError } = useLatestProductsQuery("");
+  // console.log("data", data);
 
   const dispatch = useAppDispatch();
 
@@ -43,7 +44,7 @@ const Home = () => {
               price={i.price}
               stock={i.stock}
               handler={addToCartHandler}
-              photo={i.photo}
+              photos={i.photos}
             />
           ))
         )}

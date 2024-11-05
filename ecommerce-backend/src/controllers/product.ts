@@ -90,14 +90,14 @@ export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 export const newProduct = catchAsyncErrors(
   async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
     // Log body and files to check
-    console.log('Files:', req.files); // Should show an array of file objects
-    console.log('Body:', req.body);   // Should show other fields (name, price, etc.)
+    // console.log('Files:', req.files); // Should show an array of file objects
+    // console.log('Body:', req.body);   // Should show other fields (name, price, etc.)
 
     const { name, price, stock, category } = req.body;
 
     const photos = req.files as Express.Multer.File[] | undefined;
 
-    console.log('Photos received for upload:', photos);
+    // console.log('Photos received for upload:', photos);
 
 
     if (!photos) return next(new ErrorHandler("Please add Photo", HttpStatus.BAD_REQUEST));
@@ -116,30 +116,19 @@ export const newProduct = catchAsyncErrors(
 
     // const photosURL = await uploadToCloudinary(photos);
 
-    let photosURL;
+    let photosURL = [];
     try {
       // Attempt to upload photos
       // photosURL = await uploadToCloudinary(photos);
-
-      //attempting 2 requests for cloudinary bcoz first attempts keeps failing on my system
-      try {
-        const result = await cloudinary.v2.uploader.upload(photos[0].path, {
-          folder: 'products',
-          resource_type: 'image',
-          // providing public id so that it replaces the same file if being uploaded otherwise duplicates will be created if the first request is also successfull -- on other computers
-          public_id: 'sample'
-        })
-      } catch (error) {
-
-      }
-      await sleep(5_000)
       for (let i = 0; i < photos.length; i++) {
         const result = await cloudinary.v2.uploader.upload(photos[i].path, {
           folder: 'products',
           resource_type: 'image',
         })
-        await sleep(1_000)
-        //one file is being deleted when server is stopped or refresh 
+
+        // Add the URL of the uploaded image to the photosURL array
+        photosURL.push({ public_id: result.public_id, url: result.secure_url });
+
         fs.unlinkSync(photos[i].path)
       }
     } catch (error) {
