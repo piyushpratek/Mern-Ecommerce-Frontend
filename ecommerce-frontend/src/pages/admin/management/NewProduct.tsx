@@ -1,9 +1,10 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useNewProductMutation } from "../../../redux/api/productAPI";
 import { RootState, useAppSelector } from "../../../redux/store";
 import { responseToast } from "../../../utils/features";
+import { useFileHandler } from "6pp";
 
 const NewProduct = () => {
   const { user } = useAppSelector((state: RootState) => state.userReducer);
@@ -12,40 +13,29 @@ const NewProduct = () => {
   const [category, setCategory] = useState<string>("");
   const [price, setPrice] = useState<number>(1000);
   const [stock, setStock] = useState<number>(1);
-  const [photoPrev, setPhotoPrev] = useState<string>("");
-  const [photo, setPhoto] = useState<File>();
 
   const [newProduct] = useNewProductMutation();
   const navigate = useNavigate();
 
-  const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const file: File | undefined = e.target.files?.[0];
-
-    const reader: FileReader = new FileReader();
-
-    if (file) {
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setPhotoPrev(reader.result);
-          setPhoto(file);
-        }
-      };
-    }
-  };
+  const photos = useFileHandler("multiple", 6, 5)
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name || !price || stock < 0 || !category || !photo) return;
+    if (!name || !price || stock < 0 || !category) return;
+
+    if (!photos.file || photos.file.length === 0) return;
 
     const formData = new FormData();
 
     formData.set("name", name);
     formData.set("price", price.toString());
     formData.set("stock", stock.toString());
-    formData.set("photo", photo);
     formData.set("category", category);
+
+    photos.file.forEach((file) => {
+      formData.append("photos", file);
+    });
 
     const res = await newProduct({ id: user!._id, formData });
 
@@ -103,10 +93,16 @@ const NewProduct = () => {
 
             <div>
               <label>Photo</label>
-              <input required type="file" onChange={changeImageHandler} />
+              <input required type="file" multiple onChange={photos.changeHandler} />
             </div>
 
-            {photoPrev && <img src={photoPrev} alt="New Image" />}
+            {photos.error && <p>{photos.error}</p>}
+
+            {photos.preview &&
+              photos.preview.map((img, i) => (
+                <img key={i} src={img} alt="New Image" />
+              ))}
+
             <button type="submit">Create</button>
           </form>
         </article>
