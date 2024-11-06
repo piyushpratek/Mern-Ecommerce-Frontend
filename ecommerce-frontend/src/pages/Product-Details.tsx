@@ -131,6 +131,7 @@ const ProductDetails = () => {
                 />
               )}
             </section>
+
             <section>
               <code>{data?.product?.category}</code>
               <h1>{data?.product?.name}</h1>
@@ -264,11 +265,12 @@ const ProductLoader = () => {
       <section style={{ width: "100%", height: "100%" }}>
         <Skeleton
           width="100%"
-          // containerHeight="100%"
-          // height="100%"
+          containerHeight="100%"
+          height="100%"
           length={1}
         />
       </section>
+
       <section
         style={{
           width: "100%",
@@ -292,6 +294,7 @@ const NextButton: CarouselButtonType = ({ onClick }) => (
     <FaArrowRightLong />
   </button>
 );
+
 const PrevButton: CarouselButtonType = ({ onClick }) => (
   <button onClick={onClick} className="carousel-btn">
     <FaArrowLeftLong />
