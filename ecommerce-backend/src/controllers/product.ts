@@ -93,7 +93,7 @@ export const newProduct = catchAsyncErrors(
     // console.log('Files:', req.files); // Should show an array of file objects
     // console.log('Body:', req.body);   // Should show other fields (name, price, etc.)
 
-    const { name, price, stock, category } = req.body;
+    const { name, price, stock, category, description } = req.body;
 
     const photos = req.files as Express.Multer.File[] | undefined;
 
@@ -108,7 +108,7 @@ export const newProduct = catchAsyncErrors(
     if (photos.length > 5)
       return next(new ErrorHandler("You can only upload 5 Photos", HttpStatus.BAD_REQUEST));
 
-    if (!name || !price || !stock || !category) {
+    if (!name || !price || !stock || !category || !description) {
       return next(new ErrorHandler("Please enter All Fields", HttpStatus.BAD_REQUEST));
     }
 
@@ -143,6 +143,7 @@ export const newProduct = catchAsyncErrors(
       price,
       stock,
       category: category.toLowerCase(),
+      description,
       photos: photosURL,
     });
 
@@ -158,7 +159,7 @@ export const newProduct = catchAsyncErrors(
 
 export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
-  const { name, price, stock, category } = req.body;
+  const { name, price, stock, category, description } = req.body;
   const product = await Product.findById(id);
 
   if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
@@ -195,6 +196,7 @@ export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   if (price) product.price = price;
   if (stock) product.stock = stock;
   if (category) product.category = category;
+  if (description) product.description = description;
 
   await product.save();
 

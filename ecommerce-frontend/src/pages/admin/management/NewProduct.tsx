@@ -15,6 +15,7 @@ const NewProduct = () => {
   const [category, setCategory] = useState<string>("");
   const [price, setPrice] = useState<number>(1000);
   const [stock, setStock] = useState<number>(1);
+  const [description, setDescription] = useState<string>("");
 
   const [newProduct] = useNewProductMutation();
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const NewProduct = () => {
       formData.set("price", price.toString());
       formData.set("stock", stock.toString());
       formData.set("category", category);
+      formData.set("description", description);
 
       photos.file.forEach((file) => {
         formData.append("photos", file);
@@ -68,6 +70,17 @@ const NewProduct = () => {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+
+            <div>
+              <label>Description</label>
+              <textarea
+                required
+                placeholder="Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+
             <div>
               <label>Price</label>
               <input
