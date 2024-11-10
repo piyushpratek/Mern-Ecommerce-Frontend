@@ -56,6 +56,19 @@ export const allCoupons = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+export const getCoupon = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+
+  const coupon = await Coupon.findById(id);
+
+  if (!coupon) return next(new ErrorHandler("Invalid Coupon ID", HttpStatus.BAD_REQUEST));
+
+  return res.status(HttpStatus.OK).json({
+    success: true,
+    coupon,
+  });
+});
+
 export const updateCoupon = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 

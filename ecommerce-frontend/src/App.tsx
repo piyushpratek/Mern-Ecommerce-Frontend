@@ -52,6 +52,10 @@ const DiscountManagement = lazy(
   () => import("./pages/admin/management/DiscountManagement")
 );
 
+const NewDiscount = lazy(
+  () => import("./pages/admin/management/NewDiscount")
+);
+
 const App = () => {
 
   const { user, loading } = useAppSelector(
@@ -136,6 +140,10 @@ const App = () => {
             <Route
               path="/admin/transaction/:id"
               element={<TransactionManagement />}
+            />
+            <Route
+              path="/admin/discount/new"
+              element={<NewDiscount />}
             />
             <Route
               path="/admin/discount/:id"
