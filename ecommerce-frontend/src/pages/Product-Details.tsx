@@ -149,23 +149,23 @@ const ProductDetails = () => {
                   <span>{quantity}</span>
                   <button onClick={increment}>+</button>
                 </div>
-                {/* <button
+                <button
                   onClick={() =>
                     addToCartHandler({
-                      productId: data?.product?._id!,
-                      name: data?.product?.name!,
-                      price: data?.product?.price!,
-                      stock: data?.product?.stock!,
+                      productId: data!.product!._id!,
+                      name: data!.product!.name!,
+                      price: data!.product!.price!,
+                      stock: data!.product!.stock!,
                       quantity,
                       photo: data?.product?.photos[0].url || "",
                     })
                   }
                 >
                   Add To Cart
-                </button> */}
+                </button>
               </article>
 
-              {/* <p>{data?.product?.description}</p> */}
+              <p>{data?.product?.description}</p>
             </section>
           </main>
         </>
