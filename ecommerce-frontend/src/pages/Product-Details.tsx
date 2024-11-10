@@ -23,6 +23,7 @@ import { RootState } from "../redux/store";
 import { responseToast } from "../utils/features";
 import { Skeleton } from "../components/Loader";
 import { CartItem } from "../types/types";
+import RatingsComponent from "../components/Ratings";
 
 const ProductDetails = () => {
   const params = useParams();
@@ -135,12 +136,13 @@ const ProductDetails = () => {
             <section>
               <code>{data?.product?.category}</code>
               <h1>{data?.product?.name}</h1>
-              {/* <em
+              <em
                 style={{ display: "flex", gap: "1rem", alignItems: "center" }}
               >
-                <RatingsComponent value={data?.product?.ratings || 0} />(
-                {data?.product?.numOfReviews} reviews)
-              </em> */}
+                <RatingsComponent value={data?.product?.ratings || 0} />
+                {/* (
+                {data?.product?.numOfReviews} reviews) */}
+              </em>
               <h3>₹{data?.product?.price}</h3>
               <article>
                 <div>
