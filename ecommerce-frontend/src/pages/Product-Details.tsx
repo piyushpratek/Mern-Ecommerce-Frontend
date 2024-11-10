@@ -11,7 +11,6 @@ import {
 import { FiEdit } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useParams } from "react-router-dom";
-// import RatingsComponent from "../components/ratings";
 import {
   // useAllReviewsOfProductsQuery,
   // useDeleteReviewMutation,
