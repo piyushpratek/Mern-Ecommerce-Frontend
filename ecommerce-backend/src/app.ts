@@ -13,7 +13,7 @@ import productRoute from "./routes/products";
 import orderRoute from "./routes/order";
 import paymentRoute from "./routes/payment";
 import dashboardRoute from "./routes/stats";
-import { STRIPE_KEY } from "./config/config";
+import { CLIENT_URL, STRIPE_KEY } from "./config/config";
 
 // config({
 //     path: "./.env",
@@ -32,7 +32,11 @@ const app: Application = express();
 
 app.use(express.json());
 // app.use(morgan("dev"));
-app.use(cors());
+app.use(cors({
+    origin: [CLIENT_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+}));
 
 app.get("/", (req, res) => {
     res.send("API Working with /api/v1");

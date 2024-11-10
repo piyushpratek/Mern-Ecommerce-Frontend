@@ -6,6 +6,7 @@ import {
   createPaymentIntent,
   deleteCoupon,
   newCoupon,
+  updateCoupon,
 } from "../controllers/payment";
 
 const router = express.Router();
@@ -27,7 +28,7 @@ router.route("/coupon/all").get(adminOnly, allCoupons)
 // app.get("/coupon/all", adminOnly, allCoupons);
 
 // route - /api/v1/payment/coupon/:id
-router.route("/coupon/:id").delete(adminOnly, deleteCoupon)
+router.route("/coupon/:id").put(adminOnly, updateCoupon).delete(adminOnly, deleteCoupon)
 // app.delete("/coupon/:id", adminOnly, deleteCoupon);
 
 export default router;

@@ -21,16 +21,16 @@ export const createPaymentIntent = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const newCoupon = catchAsyncErrors(async (req, res, next) => {
-  const { coupon, amount } = req.body;
+  const { code, amount } = req.body;
 
-  if (!coupon || !amount)
+  if (!code || !amount)
     return next(new ErrorHandler("Please enter both coupon and amount", HttpStatus.BAD_REQUEST));
 
-  await Coupon.create({ code: coupon, amount });
+  await Coupon.create({ code, amount });
 
   return res.status(HttpStatus.CREATED).json({
     success: true,
-    message: `Coupon ${coupon} Created Successfully`,
+    message: `Coupon ${code} Created Successfully`,
   });
 });
 
@@ -56,6 +56,26 @@ export const allCoupons = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+export const updateCoupon = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+
+  const { code, amount } = req.body;
+
+  const coupon = await Coupon.findById(id);
+
+  if (!coupon) return next(new ErrorHandler("Invalid Coupon ID", HttpStatus.BAD_REQUEST));
+
+  if (code) coupon.code = code;
+  if (amount) coupon.amount = amount;
+
+  await coupon.save();
+
+  return res.status(HttpStatus.OK).json({
+    success: true,
+    message: `Coupon ${coupon.code} Updated Successfully`,
+  });
+});
+
 export const deleteCoupon = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
@@ -68,3 +88,4 @@ export const deleteCoupon = catchAsyncErrors(async (req, res, next) => {
     message: `Coupon ${coupon.code} Deleted Successfully`,
   });
 });
+
