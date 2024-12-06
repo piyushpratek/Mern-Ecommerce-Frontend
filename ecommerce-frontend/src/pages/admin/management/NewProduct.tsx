@@ -2,12 +2,12 @@ import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useNewProductMutation } from "../../../redux/api/productAPI";
-import { RootState, useAppSelector } from "../../../redux/store";
+import { useAppSelector } from "../../../redux/store";
 import { responseToast } from "../../../utils/features";
 import { useFileHandler } from "6pp";
 
 const NewProduct = () => {
-  const { user } = useAppSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 

@@ -7,7 +7,7 @@ import {
   useOrderDetailsQuery,
   useUpdateOrderMutation,
 } from "../../../redux/api/orderAPI";
-import { RootState, server, useAppSelector } from "../../../redux/store";
+import { server, useAppSelector } from "../../../redux/store";
 import { Order, OrderItem } from "../../../types/types";
 import { responseToast } from "../../../utils/features";
 
@@ -31,7 +31,7 @@ const defaultData: Order = {
 };
 
 const TransactionManagement = () => {
-  const { user } = useAppSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const params = useParams();
   const navigate = useNavigate();

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { RootState, server, useAppSelector } from "../../redux/store";
+import { server, useAppSelector } from "../../redux/store";
 import { Skeleton } from "../../components/Loader";
 import { AllDiscountResponse } from "../../types/api-types";
 
@@ -38,7 +38,7 @@ const columns: Column<DataType>[] = [
 ];
 
 const Discount = () => {
-    const { user } = useAppSelector((state: RootState) => state.userReducer);
+    const { user } = useAppSelector((state) => state.userReducer);
 
     const {
         data,

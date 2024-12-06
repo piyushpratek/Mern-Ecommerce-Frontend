@@ -8,7 +8,7 @@ import { BarChart, DoughnutChart } from "../../components/admin/Charts";
 import Table from "../../components/admin/DashboardTable";
 import { Skeleton } from "../../components/Loader";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
-import { RootState, useAppSelector } from "../../redux/store";
+import { useAppSelector } from "../../redux/store";
 import { getLastMonths } from "../../utils/features";
 
 const userImg =
@@ -17,7 +17,7 @@ const userImg =
 const { last6Months: months } = getLastMonths();
 
 const Dashboard = () => {
-  const { user } = useAppSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const { isLoading, data, isError } = useStatsQuery(user!._id);
 

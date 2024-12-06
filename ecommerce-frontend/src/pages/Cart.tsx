@@ -9,12 +9,12 @@ import {
   discountApplied,
   removeCartItem,
 } from "../redux/reducer/cartReducer";
-import { RootState, server, useAppDispatch, useAppSelector } from "../redux/store";
+import { server, useAppDispatch, useAppSelector } from "../redux/store";
 import { CartItem } from "../types/types";
 
 const Cart = () => {
   const { cartItems, subtotal, tax, total, shippingCharges, discount } =
-    useAppSelector((state: RootState) => state.cartReducer);
+    useAppSelector((state) => state.cartReducer);
   const dispatch = useAppDispatch();
 
   const [couponCode, setCouponCode] = useState<string>("");

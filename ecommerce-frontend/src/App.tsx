@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/Protected-Route";
 import { auth } from "./firebase";
 import { getUser } from "./redux/api/userAPI";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
-import { RootState, useAppDispatch, useAppSelector } from "./redux/store";
+import { useAppDispatch, useAppSelector } from "./redux/store";
 
 const Home = lazy(() => import("./pages/Home"));
 const Search = lazy(() => import("./pages/Search"));
@@ -59,7 +59,7 @@ const NewDiscount = lazy(
 const App = () => {
 
   const { user, loading } = useAppSelector(
-    (state: RootState) => state.userReducer
+    (state) => state.userReducer
   );
 
   const dispatch = useAppDispatch()

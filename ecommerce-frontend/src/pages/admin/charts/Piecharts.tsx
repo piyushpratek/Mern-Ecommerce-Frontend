@@ -3,10 +3,10 @@ import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { DoughnutChart, PieChart } from "../../../components/admin/Charts";
 import { Skeleton } from "../../../components/Loader";
 import { usePieQuery } from "../../../redux/api/dashboardAPI";
-import { RootState, useAppSelector } from "../../../redux/store";
+import { useAppSelector } from "../../../redux/store";
 
 const PieCharts = () => {
-  const { user } = useAppSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const { isLoading, data, isError } = usePieQuery(user!._id);
 

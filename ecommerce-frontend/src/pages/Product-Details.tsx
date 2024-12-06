@@ -18,7 +18,7 @@ import {
   useProductDetailsQuery,
 } from "../redux/api/productAPI";
 import { addToCart } from "../redux/reducer/cartReducer";
-import { RootState } from "../redux/store";
+import { useAppSelector } from "../redux/store";
 import { responseToast } from "../utils/features";
 import { Skeleton } from "../components/Loader";
 import { CartItem } from "../types/types";
@@ -28,7 +28,7 @@ const ProductDetails = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const { isLoading, isError, data } = useProductDetailsQuery(params.id!);
   // const reviewsResponse = useAllReviewsOfProductsQuery(params.id!);

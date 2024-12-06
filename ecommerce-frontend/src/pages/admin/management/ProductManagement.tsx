@@ -8,12 +8,12 @@ import {
   useProductDetailsQuery,
   useUpdateProductMutation,
 } from "../../../redux/api/productAPI";
-import { RootState, useAppSelector } from "../../../redux/store";
+import { useAppSelector } from "../../../redux/store";
 import { responseToast } from "../../../utils/features";
 import { useFileHandler } from "6pp";
 
 const Productmanagement = () => {
-  const { user } = useAppSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const params = useParams();
   const navigate = useNavigate();

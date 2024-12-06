@@ -1,13 +1,12 @@
 import axios from "axios";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { RootState, server } from "../../../redux/store";
+import { server, useAppSelector } from "../../../redux/store";
 
 const NewDiscount = () => {
-    const { user } = useSelector((state: RootState) => state.userReducer);
+    const { user } = useAppSelector((state) => state.userReducer);
     const navigate = useNavigate();
 
     const [btnLoading, setBtnLoading] = useState<boolean>(false);

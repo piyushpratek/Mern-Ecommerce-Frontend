@@ -5,12 +5,12 @@ import toast from "react-hot-toast";
 import { FaTrash } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { RootState, server, useAppSelector } from "../../../redux/store";
+import { server, useAppSelector } from "../../../redux/store";
 import { SingleDiscountResponse } from "../../../types/api-types";
 import { Skeleton } from "../../../components/Loader";
 
 const DiscountManagement = () => {
-    const { user } = useAppSelector((state: RootState) => state.userReducer);
+    const { user } = useAppSelector((state) => state.userReducer);
     const { id } = useParams();
     const navigate = useNavigate();
 

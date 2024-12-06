@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useNewOrderMutation } from "../redux/api/orderAPI";
 import { resetCart } from "../redux/reducer/cartReducer";
-import { RootState, useAppDispatch, useAppSelector } from "../redux/store";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import { NewOrderRequest } from "../types/api-types";
 import { responseToast } from "../utils/features";
 
@@ -22,7 +22,7 @@ const CheckOutForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { user } = useAppSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const {
     shippingInfo,
@@ -32,7 +32,7 @@ const CheckOutForm = () => {
     discount,
     shippingCharges,
     total,
-  } = useAppSelector((state: RootState) => state.cartReducer);
+  } = useAppSelector((state) => state.cartReducer);
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 

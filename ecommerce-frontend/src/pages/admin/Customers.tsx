@@ -9,7 +9,7 @@ import {
   useAllUsersQuery,
   useDeleteUserMutation,
 } from "../../redux/api/userAPI";
-import { RootState, useAppSelector } from "../../redux/store";
+import { useAppSelector } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
 import { responseToast } from "../../utils/features";
 
@@ -50,7 +50,7 @@ const columns: Column<DataType>[] = [
 ];
 
 const Customers = () => {
-  const { user } = useAppSelector((state: RootState) => state.userReducer);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const { isLoading, data, isError, error } = useAllUsersQuery(user!._id);
 
