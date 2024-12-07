@@ -1,4 +1,4 @@
-import { myCache } from "../app";
+import { redis } from "../../server";
 import { HttpStatus } from "../http-status.enum";
 import { catchAsyncErrors } from "../middlewares/error";
 import { Order } from "../models/order";
@@ -11,11 +11,12 @@ import {
 } from "../utils/features";
 
 export const getDashboardStats = catchAsyncErrors(async (req, res, next) => {
-  let stats = {};
+  let stats;
 
   const key = "admin-stats";
 
-  if (myCache.has(key)) stats = JSON.parse(myCache.get(key) as string);
+  stats = await redis.get(key)
+  if (stats) stats = JSON.parse(stats);
   else {
     const today = new Date();
     const sixMonthsAgo = new Date();
@@ -192,7 +193,7 @@ export const getDashboardStats = catchAsyncErrors(async (req, res, next) => {
       latestTransaction: modifiedLatestTransaction,
     };
 
-    myCache.set(key, JSON.stringify(stats));
+    await redis.set(key, JSON.stringify(stats));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -205,7 +206,9 @@ export const getPieCharts = catchAsyncErrors(async (req, res, next) => {
   let charts;
   const key = "admin-pie-charts";
 
-  if (myCache.has(key)) charts = JSON.parse(myCache.get(key) as string);
+  charts = await redis.get(key)
+
+  if (charts) charts = JSON.parse(charts);
   else {
     const allOrderPromise = Order.find({}).select([
       "total",
@@ -305,7 +308,7 @@ export const getPieCharts = catchAsyncErrors(async (req, res, next) => {
       adminCustomer,
     };
 
-    myCache.set(key, JSON.stringify(charts));
+    await redis.set(key, JSON.stringify(charts));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -318,7 +321,9 @@ export const getBarCharts = catchAsyncErrors(async (req, res, next) => {
   let charts;
   const key = "admin-bar-charts";
 
-  if (myCache.has(key)) charts = JSON.parse(myCache.get(key) as string);
+  charts = await redis.get(key)
+
+  if (charts) charts = JSON.parse(charts);
   else {
     const today = new Date();
 
@@ -365,7 +370,7 @@ export const getBarCharts = catchAsyncErrors(async (req, res, next) => {
       orders: ordersCounts,
     };
 
-    myCache.set(key, JSON.stringify(charts));
+    await redis.set(key, JSON.stringify(charts));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -378,7 +383,9 @@ export const getLineCharts = catchAsyncErrors(async (req, res, next) => {
   let charts;
   const key = "admin-line-charts";
 
-  if (myCache.has(key)) charts = JSON.parse(myCache.get(key) as string);
+  charts = await redis.get(key)
+
+  if (charts) charts = JSON.parse(charts);
   else {
     const today = new Date();
 
@@ -420,7 +427,7 @@ export const getLineCharts = catchAsyncErrors(async (req, res, next) => {
       revenue,
     };
 
-    myCache.set(key, JSON.stringify(charts));
+    await redis.set(key, JSON.stringify(charts));
   }
 
   return res.status(HttpStatus.OK).json({
