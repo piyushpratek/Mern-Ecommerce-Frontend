@@ -102,7 +102,6 @@ const ProductDetails = () => {
 
     responseToast(res, null, "");
 
-    // API call to submit review
   };
 
   const handleDeleteReview = async (reviewId: string) => {
