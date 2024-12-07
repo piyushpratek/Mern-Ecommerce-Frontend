@@ -9,7 +9,7 @@ import {
   useUpdateProductMutation,
 } from "../../../redux/api/productAPI";
 import { useAppSelector } from "../../../redux/store";
-import { responseToast } from "../../../utils/features";
+import { responseToast, transformImage } from "../../../utils/features";
 import { useFileHandler } from "6pp";
 
 const Productmanagement = () => {
@@ -107,7 +107,7 @@ const Productmanagement = () => {
           <>
             <section>
               <strong>ID - {data?.product._id}</strong>
-              <img src={photos?.[0]?.url} alt="Product" />
+              <img src={transformImage(photos![0]?.url)} alt="Product" />
               <p>{name}</p>
               {stock > 0 ? (
                 <span className="green">{stock} Available</span>
