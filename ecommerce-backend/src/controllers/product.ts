@@ -283,28 +283,32 @@ export const getAllProducts = catchAsyncErrors(
   }
 );
 
-// export const allReviewsOfProduct = catchAsyncErrors(async (req, res, next) => {
-//   let reviews;
-//   const key = `reviews-${req.params.id}`;
+export const allReviewsOfProduct = catchAsyncErrors(async (req, res, next) => {
+  // let reviews;
+  // const key = `reviews-${req.params.id}`;
 
-//   reviews = await redis.get(key);
+  // reviews = await redis.get(key);
 
-//   if (reviews) reviews = JSON.parse(reviews);
-//   else {
-//     reviews = await Review.find({
-//       product: req.params.id,
-//     })
-//       .populate("user", "name photo")
-//       .sort({ updatedAt: -1 });
+  // if (reviews) reviews = JSON.parse(reviews);
+  // else {
+  //   reviews = await Review.find({
+  //     product: req.params.id,
+  //   })
+  //     .populate("user", "name photo")
+  //     .sort({ updatedAt: -1 });
 
-//     await redis.setex(key, redisTTL, JSON.stringify(reviews));
-//   }
+  //   await redis.setex(key, redisTTL, JSON.stringify(reviews));
+  // }
 
-//   return res.status(200).json({
-//     success: true,
-//     reviews,
-//   });
-// });
+  const reviews = await Review.findById({
+    product: req.params.id
+  })
+
+  return res.status(HttpStatus.OK).json({
+    success: true,
+    reviews,
+  });
+});
 
 export const newReview = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.query.id);
