@@ -1,30 +1,27 @@
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { myCache } from "../app";
 import { Product } from "../models/product";
 import { InvalidateCacheProps, OrderItemType } from "../types/types";
-import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
+import { Review } from "../models/review";
 
 
-// const getBase64 = (file: Express.Multer.File) =>
-//   `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+export const findAverageRatings = async (
+  productId: mongoose.Types.ObjectId
+) => {
+  let totalRating = 0;
 
-// export const uploadToCloudinary = async (files: Express.Multer.File[]) => {
-//   const promises = files.map(async (file) => {
-//     return new Promise<UploadApiResponse>((resolve, reject) => {
-//       cloudinary.uploader.upload(getBase64(file), (error, result) => {
-//         if (error) return reject(error);
-//         resolve(result!);
-//       });
-//     });
-//   });
+  const reviews = await Review.find({ product: productId });
+  reviews.forEach((review) => {
+    totalRating += review.rating;
+  });
 
-//   const result = await Promise.all(promises);
+  const averateRating = Math.floor(totalRating / reviews.length) || 0;
 
-//   return result.map((i) => ({
-//     public_id: i.public_id,
-//     url: i.secure_url,
-//   }));
-// };
+  return {
+    numOfReviews: reviews.length,
+    ratings: averateRating,
+  };
+};
 
 export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 

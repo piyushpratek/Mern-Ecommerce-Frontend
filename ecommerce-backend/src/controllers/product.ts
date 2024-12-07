@@ -9,10 +9,12 @@ import { Product } from "../models/product";
 import ErrorHandler from "../utils/utility-class";
 import { rm } from "fs";
 import { myCache } from "../app";
-import { invalidateCache, sleep } from "../utils/features";
+import { findAverageRatings, invalidateCache, sleep } from "../utils/features";
 import { HttpStatus } from "../http-status.enum";
 import cloudinary from 'cloudinary'
 import fs from 'fs'
+import { Review } from "../models/review";
+import { User } from "../models/user";
 
 // import { faker } from "@faker-js/faker";
 
@@ -280,6 +282,116 @@ export const getAllProducts = catchAsyncErrors(
     });
   }
 );
+
+// export const allReviewsOfProduct = catchAsyncErrors(async (req, res, next) => {
+//   let reviews;
+//   const key = `reviews-${req.params.id}`;
+
+//   reviews = await redis.get(key);
+
+//   if (reviews) reviews = JSON.parse(reviews);
+//   else {
+//     reviews = await Review.find({
+//       product: req.params.id,
+//     })
+//       .populate("user", "name photo")
+//       .sort({ updatedAt: -1 });
+
+//     await redis.setex(key, redisTTL, JSON.stringify(reviews));
+//   }
+
+//   return res.status(200).json({
+//     success: true,
+//     reviews,
+//   });
+// });
+
+export const newReview = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.query.id);
+
+  if (!user) return next(new ErrorHandler("Not Logged In", HttpStatus.NOT_FOUND));
+
+  const product = await Product.findById(req.params.id);
+  if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
+
+  const { comment, rating } = req.body;
+
+  const alreadyReviewed = await Review.findOne({
+    user: user._id,
+    product: product._id,
+  });
+
+  if (alreadyReviewed) {
+    alreadyReviewed.comment = comment;
+    alreadyReviewed.rating = rating;
+
+    await alreadyReviewed.save();
+  } else {
+    await Review.create({
+      comment,
+      rating,
+      user: user._id,
+      product: product._id,
+    });
+  }
+
+  const { ratings, numOfReviews } = await findAverageRatings(product._id);
+
+  product.ratings = ratings;
+  product.numOfReviews = numOfReviews;
+
+  await product.save();
+
+  await invalidateCache({
+    product: true,
+    productId: String(product._id),
+    admin: true,
+    review: true,
+  });
+
+  return res.status(alreadyReviewed ? HttpStatus.OK : HttpStatus.CREATED).json({
+    success: true,
+    message: alreadyReviewed ? "Review Update" : "Review Added",
+  });
+});
+
+export const deleteReview = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.query.id);
+
+  if (!user) return next(new ErrorHandler("Not Logged In", HttpStatus.NOT_FOUND));
+
+  const review = await Review.findById(req.params.id);
+
+  if (!review) return next(new ErrorHandler("Review Not Found", HttpStatus.NOT_FOUND));
+
+  const isAuthenticUser = review.user.toString() === user._id.toString();
+
+  if (!isAuthenticUser) return next(new ErrorHandler("Not Authorized", HttpStatus.UNAUTHORIZED));
+
+  await review.deleteOne();
+
+  const product = await Product.findById(review.product);
+
+  if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
+
+  const { ratings, numOfReviews } = await findAverageRatings(product._id);
+
+  product.ratings = ratings;
+  product.numOfReviews = numOfReviews;
+
+  await product.save();
+
+  await invalidateCache({
+    product: true,
+    productId: String(product._id),
+    admin: true,
+  });
+
+  return res.status(HttpStatus.OK).json({
+    success: true,
+    message: "Review Deleted",
+  });
+});
 
 // const generateRandomProducts = async (count: number = 10) => {
 //   const products = [];

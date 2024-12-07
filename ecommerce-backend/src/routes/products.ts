@@ -2,12 +2,14 @@ import express from "express";
 import { adminOnly } from "../middlewares/auth";
 import {
   deleteProduct,
+  deleteReview,
   getAdminProducts,
   getAllCategories,
   getAllProducts,
   getSingleProduct,
   getlatestProducts,
   newProduct,
+  newReview,
   updateProduct,
 } from "../controllers/product";
 import { mutliUpload } from "../middlewares/multer";
@@ -31,5 +33,9 @@ router.route("/admin-products").get(adminOnly, getAdminProducts)
 
 // To get, update, delete Product
 router.route("/:id").get(getSingleProduct).put(adminOnly, mutliUpload, updateProduct).delete(adminOnly, deleteProduct)
+
+// router.route("/reviews/:id").get(allReviewsOfProduct)
+router.route("/review/new/:id").post(newReview);
+router.route("/review/:id").delete(deleteReview);
 
 export default router;
