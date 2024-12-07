@@ -13,7 +13,7 @@ import { Navigate, useParams } from "react-router-dom";
 import {
   useAllReviewsOfProductsQuery,
   useDeleteReviewMutation,
-  // useNewReviewMutation,
+  useNewReviewMutation,
   useProductDetailsQuery,
 } from "../redux/api/productAPI";
 import { addToCart } from "../redux/reducer/cartReducer";
@@ -35,13 +35,32 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
 
   const [reviewComment, setReviewComment] = useState("");
+
   const reviewDialogRef = useRef<HTMLDialogElement>(null);
+
   const [reviewSubmitLoading, setReviewSubmitLoading] = useState(false);
 
-  // const [createReview] = useNewReviewMutation();
+  const [createReview] = useNewReviewMutation();
   const [deleteReview] = useDeleteReviewMutation();
 
+  const {
+    Ratings: RatingsEditable,
+    rating,
+    setRating,
+  } = useRating({
+    IconFilled: <FaStar />,
+    IconOutline: <FaRegStar />,
+    value: 0,
+    selectable: true,
+    styles: {
+      fontSize: "1.75rem",
+      color: "coral",
+      justifyContent: "flex-start",
+    },
+  });
+
   const decrement = () => setQuantity((prev) => prev - 1);
+
   const increment = () => {
     if (data?.product?.stock === quantity)
       return toast.error(`${data?.product?.stock} available only`);
@@ -61,25 +80,9 @@ const ProductDetails = () => {
     reviewDialogRef.current?.showModal();
   };
 
-  // const {
-  //   Ratings: RatingsEditable,
-  //   rating,
-  //   setRating,
-  // } = useRating({
-  //   IconFilled: <FaStar />,
-  //   IconOutline: <FaRegStar />,
-  //   value: 0,
-  //   selectable: true,
-  //   styles: {
-  //     fontSize: "1.75rem",
-  //     color: "coral",
-  //     justifyContent: "flex-start",
-  //   },
-  // });
-
   const reviewCloseHandler = () => {
     reviewDialogRef.current?.close();
-    // setRating(0);
+    setRating(0);
     setReviewComment("");
   };
 
@@ -88,16 +91,16 @@ const ProductDetails = () => {
     setReviewSubmitLoading(true);
     reviewCloseHandler();
 
-    // const res = await createReview({
-    //   comment: reviewComment,
-    //   rating,
-    //   userId: user?._id,
-    //   productId: params.id!,
-    // });
+    const res = await createReview({
+      comment: reviewComment,
+      rating,
+      userId: user?._id,
+      productId: params.id!,
+    });
 
     setReviewSubmitLoading(false);
 
-    // responseToast(res, null, "");
+    responseToast(res, null, "");
 
     // API call to submit review
   };
@@ -178,7 +181,7 @@ const ProductDetails = () => {
             onChange={(e) => setReviewComment(e.target.value)}
             placeholder="Review..."
           ></textarea>
-          {/* <RatingsEditable /> */}
+          <RatingsEditable />
           <button disabled={reviewSubmitLoading} type="submit">
             Submit
           </button>

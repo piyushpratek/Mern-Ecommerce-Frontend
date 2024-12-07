@@ -302,7 +302,7 @@ export const allReviewsOfProduct = catchAsyncErrors(async (req, res, next) => {
 
   const reviews = await Review.find({
     product: req.params.id
-  }).populate("user", "name")
+  }).populate("user", "name photo").sort({ updatedAt: -1 })
 
   return res.status(HttpStatus.OK).json({
     success: true,
