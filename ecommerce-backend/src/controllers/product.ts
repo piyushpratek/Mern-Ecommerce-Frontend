@@ -7,9 +7,7 @@ import {
 } from "../types/types";
 import { Product } from "../models/product";
 import ErrorHandler from "../utils/utility-class";
-import { rm } from "fs";
-import { myCache } from "../app";
-import { findAverageRatings, invalidateCache, sleep } from "../utils/features";
+import { findAverageRatings, invalidateCache } from "../utils/features";
 import { HttpStatus } from "../http-status.enum";
 import cloudinary from 'cloudinary'
 import fs from 'fs'

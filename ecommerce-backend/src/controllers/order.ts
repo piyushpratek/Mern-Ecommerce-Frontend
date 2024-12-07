@@ -5,19 +5,21 @@ import { Order } from "../models/order";
 import { invalidateCache, reduceStock } from "../utils/features";
 import ErrorHandler from "../utils/utility-class";
 import { HttpStatus } from "../http-status.enum";
-import { myCache } from "../app";
+import { redis } from "../../server";
 
 export const myOrders = catchAsyncErrors(async (req, res, next) => {
   const { id: user } = req.query;
 
   const key = `my-orders-${user}`;
 
-  let orders = [];
+  let orders;
 
-  if (myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
+  orders = await redis.get(key)
+
+  if (orders) orders = JSON.parse(orders);
   else {
     orders = await Order.find({ user });
-    myCache.set(key, JSON.stringify(orders));
+    await redis.set(key, JSON.stringify(orders));
   }
   return res.status(HttpStatus.OK).json({
     success: true,
@@ -28,12 +30,15 @@ export const myOrders = catchAsyncErrors(async (req, res, next) => {
 export const allOrders = catchAsyncErrors(async (req, res, next) => {
   const key = `all-orders`;
 
-  let orders = [];
+  let orders;
 
-  if (myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
+  orders = await redis.get(key)
+
+
+  if (orders) orders = JSON.parse(orders);
   else {
     orders = await Order.find().populate("user", "name");
-    myCache.set(key, JSON.stringify(orders));
+    await redis.set(key, JSON.stringify(orders));
   }
   return res.status(HttpStatus.OK).json({
     success: true,
@@ -47,13 +52,15 @@ export const getSingleOrder = catchAsyncErrors(async (req, res, next) => {
 
   let order;
 
-  if (myCache.has(key)) order = JSON.parse(myCache.get(key) as string);
+  order = await redis.get(key)
+
+  if (order) order = JSON.parse(order);
   else {
     order = await Order.findById(id).populate("user", "name");
 
     if (!order) return next(new ErrorHandler("Order Not Found", HttpStatus.NOT_FOUND));
 
-    myCache.set(key, JSON.stringify(order));
+    await redis.set(key, JSON.stringify(order));
   }
   return res.status(HttpStatus.OK).json({
     success: true,
