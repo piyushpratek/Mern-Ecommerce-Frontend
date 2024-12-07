@@ -261,9 +261,9 @@ export const getAllProducts = catchAsyncErrors(
 
     const cachedData = await redis.get(key)
     if (cachedData) {
-      products = JSON.parse(cachedData)
-      totalPage = products.totalPage
-      products = products.products
+      const productsData = JSON.parse(cachedData)
+      totalPage = productsData.totalPage
+      products = productsData.products
     } else {
       // 1,2,3,4,5,6,7,8
       // 9,10,11,12,13,14,15,16
@@ -291,12 +291,14 @@ export const getAllProducts = catchAsyncErrors(
         .limit(limit)
         .skip(skip);
 
-      const [products, filteredOnlyProduct] = await Promise.all([
+      const [productsFetched, filteredOnlyProduct] = await Promise.all([
         productsPromise,
         Product.find(baseQuery),
       ]);
 
-      const totalPage = Math.ceil(filteredOnlyProduct.length / limit);
+      products = productsFetched
+
+      totalPage = Math.ceil(filteredOnlyProduct.length / limit);
 
       await redis.setex(key, 30, JSON.stringify({ products, totalPage }))
     }
