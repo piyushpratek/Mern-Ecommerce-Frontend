@@ -15,19 +15,22 @@ import cloudinary from 'cloudinary'
 import fs from 'fs'
 import { Review } from "../models/review";
 import { User } from "../models/user";
+import { redis } from "../../server";
 
 // import { faker } from "@faker-js/faker";
 
 
 // Revalidate on New,Update,Delete Product & on New Order
 export const getlatestProducts = catchAsyncErrors(async (req, res, next) => {
-  let products;
+  let products
 
-  if (myCache.has("latest-products"))
-    products = JSON.parse(myCache.get("latest-products") as string);
+  products = await redis.get("latest-products")
+
+  if (products)
+    products = JSON.parse(products);
   else {
     products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
-    myCache.set("latest-products", JSON.stringify(products));
+    await redis.set("latest-products", JSON.stringify(products));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -40,11 +43,14 @@ export const getlatestProducts = catchAsyncErrors(async (req, res, next) => {
 export const getAllCategories = catchAsyncErrors(async (req, res, next) => {
   let categories;
 
-  if (myCache.has("categories"))
-    categories = JSON.parse(myCache.get("categories") as string);
+  categories = await redis.get("categories")
+
+
+  if (categories)
+    categories = JSON.parse(categories);
   else {
     categories = await Product.distinct("category");
-    myCache.set("categories", JSON.stringify(categories));
+    await redis.set("categories", JSON.stringify(categories));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -56,11 +62,14 @@ export const getAllCategories = catchAsyncErrors(async (req, res, next) => {
 // Revalidate on New,Update,Delete Product & on New Order
 export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
   let products;
-  if (myCache.has("all-products"))
-    products = JSON.parse(myCache.get("all-products") as string);
+
+  products = await redis.get("all-products")
+
+  if (products)
+    products = JSON.parse(products);
   else {
     products = await Product.find({});
-    myCache.set("all-products", JSON.stringify(products));
+    await redis.set("all-products", JSON.stringify(products));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -71,15 +80,19 @@ export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
 
 export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   let product;
+
   const id = req.params.id;
-  if (myCache.has(`product-${id}`))
-    product = JSON.parse(myCache.get(`product-${id}`) as string);
+
+  product = await redis.get(`product-${id}`)
+
+  if (product)
+    product = JSON.parse(product);
   else {
     product = await Product.findById(id);
 
     if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
 
-    myCache.set(`product-${id}`, JSON.stringify(product));
+    await redis.set(`product-${id}`, JSON.stringify(product));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -242,38 +255,53 @@ export const getAllProducts = catchAsyncErrors(
     const { search, sort, category, price } = req.query;
 
     const page = Number(req.query.page) || 1;
-    // 1,2,3,4,5,6,7,8
-    // 9,10,11,12,13,14,15,16
-    // 17,18,19,20,21,22,23,24
-    const limit = Number(process.env.PRODUCT_PER_PAGE) || 8;
-    const skip = (page - 1) * limit;
 
-    const baseQuery: BaseQuery = {};
+    const key = `products-${search}-${sort}-${category}-${price}-${page}`
 
-    if (search)
-      baseQuery.name = {
-        $regex: search,
-        $options: "i",
-      };
+    let products;
+    let totalPage;
 
-    if (price)
-      baseQuery.price = {
-        $lte: Number(price),
-      };
+    const cachedData = await redis.get(key)
+    if (cachedData) {
+      products = JSON.parse(cachedData)
+      totalPage = products.totalPage
+      products = products.products
+    } else {
+      // 1,2,3,4,5,6,7,8
+      // 9,10,11,12,13,14,15,16
+      // 17,18,19,20,21,22,23,24
+      const limit = Number(process.env.PRODUCT_PER_PAGE) || 8;
+      const skip = (page - 1) * limit;
 
-    if (category) baseQuery.category = category;
+      const baseQuery: BaseQuery = {};
 
-    const productsPromise = Product.find(baseQuery)
-      .sort(sort && { price: sort === "asc" ? 1 : -1 })
-      .limit(limit)
-      .skip(skip);
+      if (search)
+        baseQuery.name = {
+          $regex: search,
+          $options: "i",
+        };
 
-    const [products, filteredOnlyProduct] = await Promise.all([
-      productsPromise,
-      Product.find(baseQuery),
-    ]);
+      if (price)
+        baseQuery.price = {
+          $lte: Number(price),
+        };
 
-    const totalPage = Math.ceil(filteredOnlyProduct.length / limit);
+      if (category) baseQuery.category = category;
+
+      const productsPromise = Product.find(baseQuery)
+        .sort(sort && { price: sort === "asc" ? 1 : -1 })
+        .limit(limit)
+        .skip(skip);
+
+      const [products, filteredOnlyProduct] = await Promise.all([
+        productsPromise,
+        Product.find(baseQuery),
+      ]);
+
+      const totalPage = Math.ceil(filteredOnlyProduct.length / limit);
+
+      await redis.setex(key, 30, JSON.stringify({ products, totalPage }))
+    }
 
     return res.status(200).json({
       success: true,
@@ -284,25 +312,24 @@ export const getAllProducts = catchAsyncErrors(
 );
 
 export const allReviewsOfProduct = catchAsyncErrors(async (req, res, next) => {
-  // let reviews;
-  // const key = `reviews-${req.params.id}`;
 
-  // reviews = await redis.get(key);
+  let reviews;
 
-  // if (reviews) reviews = JSON.parse(reviews);
-  // else {
-  //   reviews = await Review.find({
-  //     product: req.params.id,
-  //   })
-  //     .populate("user", "name photo")
-  //     .sort({ updatedAt: -1 });
+  const key = `reviews-${req.params.id}`;
 
-  //   await redis.setex(key, redisTTL, JSON.stringify(reviews));
-  // }
+  reviews = await redis.get(key);
 
-  const reviews = await Review.find({
-    product: req.params.id
-  }).populate("user", "name photo").sort({ updatedAt: -1 })
+  if (reviews) reviews = JSON.parse(reviews);
+  else {
+    reviews = await Review.find({
+      product: req.params.id,
+    })
+      .populate("user", "name photo")
+      .sort({ updatedAt: -1 });
+
+    // await redis.setex(key, redisTTL, JSON.stringify(reviews));
+    await redis.set(key, JSON.stringify(reviews));
+  }
 
   return res.status(HttpStatus.OK).json({
     success: true,

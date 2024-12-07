@@ -13,7 +13,7 @@ process.on('uncaughtException', (err: Error) => {
     process.exit(1)
 })
 void connectDB.connect()
-connectRedis(REDIS_URI)
+export const redis = connectRedis(REDIS_URI)
 
 cloudinary.config({
     cloud_name: CLOUDINARY_NAME,
