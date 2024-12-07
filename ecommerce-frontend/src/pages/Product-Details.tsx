@@ -139,8 +139,7 @@ const ProductDetails = () => {
                 style={{ display: "flex", gap: "1rem", alignItems: "center" }}
               >
                 <RatingsComponent value={data?.product?.ratings || 0} />
-                {/* (
-                {data?.product?.numOfReviews} reviews) */}
+                ({data?.product?.numOfReviews} reviews)
               </em>
               <h3>₹{data?.product?.price}</h3>
               <article>
