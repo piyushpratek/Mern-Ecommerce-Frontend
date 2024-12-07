@@ -1,9 +1,9 @@
 import mongoose, { Document } from "mongoose";
-import { myCache } from "../app";
 import { Product } from "../models/product";
 import { InvalidateCacheProps, OrderItemType } from "../types/types";
 import { Review } from "../models/review";
 import { Redis } from "ioredis";
+import { redis } from "../../server";
 
 export const connectRedis = (redisURI: string) => {
   const redis = new Redis(redisURI);
@@ -36,7 +36,7 @@ export const findAverageRatings = async (
 export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 
-export const invalidateCache = ({
+export const invalidateCache = async ({
   product,
   order,
   admin,
@@ -56,7 +56,7 @@ export const invalidateCache = ({
     if (typeof productId === "object")
       productId.forEach((i) => productKeys.push(`product-${i}`));
 
-    myCache.del(productKeys);
+    await redis.del(productKeys);
   }
   if (order) {
     const ordersKeys: string[] = [
@@ -65,10 +65,10 @@ export const invalidateCache = ({
       `order-${orderId}`,
     ];
 
-    myCache.del(ordersKeys);
+    await redis.del(ordersKeys);
   }
   if (admin) {
-    myCache.del([
+    await redis.del([
       "admin-stats",
       "admin-pie-charts",
       "admin-bar-charts",

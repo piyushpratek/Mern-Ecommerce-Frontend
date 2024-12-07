@@ -97,7 +97,7 @@ export const newOrder = catchAsyncErrors(
 
     await reduceStock(orderItems);
 
-    invalidateCache({
+    await invalidateCache({
       product: true,
       order: true,
       admin: true,
@@ -133,7 +133,7 @@ export const processOrder = catchAsyncErrors(async (req, res, next) => {
 
   await order.save();
 
-  invalidateCache({
+  await invalidateCache({
     product: false,
     order: true,
     admin: true,
@@ -155,7 +155,7 @@ export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
 
   await order.deleteOne();
 
-  invalidateCache({
+  await invalidateCache({
     product: false,
     order: true,
     admin: true,

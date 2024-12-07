@@ -160,7 +160,7 @@ export const newProduct = catchAsyncErrors(
       photos: photosURL,
     });
 
-    invalidateCache({ product: true, admin: true });
+    await invalidateCache({ product: true, admin: true });
 
     return res.status(HttpStatus.CREATED).json({
       success: true,
@@ -213,7 +213,7 @@ export const updateProduct = catchAsyncErrors(async (req, res, next) => {
 
   await product.save();
 
-  invalidateCache({
+  await invalidateCache({
     product: true,
     productId: String(product._id),
     admin: true,
@@ -236,7 +236,7 @@ export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
 
   await product.deleteOne();
 
-  invalidateCache({
+  await invalidateCache({
     product: true,
     productId: String(product._id),
     admin: true,
