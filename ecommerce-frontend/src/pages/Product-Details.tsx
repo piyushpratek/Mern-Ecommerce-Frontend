@@ -9,29 +9,28 @@ import {
   FaStar,
 } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
-import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useParams } from "react-router-dom";
 import {
-  // useAllReviewsOfProductsQuery,
-  // useDeleteReviewMutation,
+  useAllReviewsOfProductsQuery,
+  useDeleteReviewMutation,
   // useNewReviewMutation,
   useProductDetailsQuery,
 } from "../redux/api/productAPI";
 import { addToCart } from "../redux/reducer/cartReducer";
-import { useAppSelector } from "../redux/store";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import { responseToast } from "../utils/features";
 import { Skeleton } from "../components/Loader";
-import { CartItem } from "../types/types";
+import { CartItem, Review } from "../types/types";
 import RatingsComponent from "../components/Ratings";
 
 const ProductDetails = () => {
   const params = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { user } = useAppSelector((state) => state.userReducer);
 
   const { isLoading, isError, data } = useProductDetailsQuery(params.id!);
-  // const reviewsResponse = useAllReviewsOfProductsQuery(params.id!);
+  const reviewsResponse = useAllReviewsOfProductsQuery(params.id!);
   const [carouselOpen, setCarouselOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
@@ -40,7 +39,7 @@ const ProductDetails = () => {
   const [reviewSubmitLoading, setReviewSubmitLoading] = useState(false);
 
   // const [createReview] = useNewReviewMutation();
-  // const [deleteReview] = useDeleteReviewMutation();
+  const [deleteReview] = useDeleteReviewMutation();
 
   const decrement = () => setQuantity((prev) => prev - 1);
   const increment = () => {
@@ -103,10 +102,10 @@ const ProductDetails = () => {
     // API call to submit review
   };
 
-  // const handleDeleteReview = async (reviewId: string) => {
-  //   const res = await deleteReview({ reviewId, userId: user?._id });
-  //   responseToast(res, null, "");
-  // };
+  const handleDeleteReview = async (reviewId: string) => {
+    const res = await deleteReview({ reviewId, userId: user?._id });
+    responseToast(res, null, "");
+  };
 
   return (
     <div className="product-details">
@@ -190,13 +189,13 @@ const ProductDetails = () => {
         <article>
           <h2>Reviews</h2>
 
-          {/* {reviewsResponse.isLoading
+          {reviewsResponse.isLoading
             ? null
             : user && (
               <button onClick={showDialog}>
                 <FiEdit />
               </button>
-            )} */}
+            )}
         </article>
         <div
           style={{
@@ -206,7 +205,7 @@ const ProductDetails = () => {
             padding: "2rem",
           }}
         >
-          {/* {reviewsResponse.isLoading ? (
+          {reviewsResponse.isLoading ? (
             <>
               <Skeleton width="45rem" length={5} />
               <Skeleton width="45rem" length={5} />
@@ -221,36 +220,36 @@ const ProductDetails = () => {
                 review={review}
               />
             ))
-          )} */}
+          )}
         </div>
       </section>
     </div>
   );
 };
 
-// const ReviewCard = ({
-//   review,
-//   userId,
-//   handleDeleteReview,
-// }: {
-//   userId?: string;
-//   review: Review;
-//   handleDeleteReview: (reviewId: string) => void;
-// }) => (
-//   <div className="review">
-//     <RatingsComponent value={review.rating} />
-//     <p>{review.comment}</p>
-//     <div>
-//       <img src={review.user.photo} alt="User" />
-//       <small>{review.user.name}</small>
-//     </div>
-//     {userId === review.user._id && (
-//       <button onClick={() => handleDeleteReview(review._id)}>
-//         <FaTrash />
-//       </button>
-//     )}
-//   </div>
-// );
+const ReviewCard = ({
+  review,
+  userId,
+  handleDeleteReview,
+}: {
+  userId?: string;
+  review: Review;
+  handleDeleteReview: (reviewId: string) => void;
+}) => (
+  <div className="review">
+    <RatingsComponent value={review.rating} />
+    <p>{review.comment}</p>
+    <div>
+      <img src={review.user.photo} alt="User" />
+      <small>{review.user.name}</small>
+    </div>
+    {userId === review.user._id && (
+      <button onClick={() => handleDeleteReview(review._id)}>
+        <FaTrash />
+      </button>
+    )}
+  </div>
+);
 
 const ProductLoader = () => {
   return (

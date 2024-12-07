@@ -300,9 +300,9 @@ export const allReviewsOfProduct = catchAsyncErrors(async (req, res, next) => {
   //   await redis.setex(key, redisTTL, JSON.stringify(reviews));
   // }
 
-  const reviews = await Review.findById({
+  const reviews = await Review.find({
     product: req.params.id
-  })
+  }).populate("user", "name")
 
   return res.status(HttpStatus.OK).json({
     success: true,
