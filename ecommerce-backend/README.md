@@ -36,3 +36,4 @@ Run Redis Stack on Docker link - https://redis.io/docs/latest/operate/oss_and_st
 npmjs link for ioredis - https://www.npmjs.com/package/ioredis
 
 to start docker - docker compose up -d
+to stop docker container - docker compose down

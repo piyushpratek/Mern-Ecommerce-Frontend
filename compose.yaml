@@ -16,6 +16,44 @@ services:
     ports:
       - 6379:6379
       - 8001:8001
+  server:
+    build:
+      context: ./ecommerce-backend
+      dockerfile: Dockerfile.dev
+    container_name: server
+    ports:
+      - 4000:4000
+    env_file:
+      - ./ecommerce-backend/.env.development
+    depends_on:
+      - mongodb
+      - redis
+    develop:
+      watch:
+        - path: ./ecommerce-backend/package*.json
+          action: rebuild
+        - path: ./ecommerce-backend
+          target: /app
+          action: sync
+
+  client:
+    build:
+      context: ./ecommerce-frontend
+      dockerfile: Dockerfile.env
+    container_name: client
+    ports:
+      - 5173:5173
+    env_file:
+      - ./ecommerce-frontend/.env
+    depends_on:
+      - server
+    develop:
+      watch:
+        - path: ./ecommerce-frontend/package*.json
+          action: rebuild
+        - path: ./ecommerce-frontend
+          target: /app
+          action: sync
 
 volumes:
   mongodb_data:
