@@ -1,4 +1,4 @@
-import { redis } from "../../server";
+import { redis, redisTTL } from "../../server";
 import { HttpStatus } from "../http-status.enum";
 import { catchAsyncErrors } from "../middlewares/error";
 import { Order } from "../models/order";
@@ -193,7 +193,7 @@ export const getDashboardStats = catchAsyncErrors(async (req, res, next) => {
       latestTransaction: modifiedLatestTransaction,
     };
 
-    await redis.set(key, JSON.stringify(stats));
+    await redis.setex(key, redisTTL, JSON.stringify(stats));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -308,7 +308,7 @@ export const getPieCharts = catchAsyncErrors(async (req, res, next) => {
       adminCustomer,
     };
 
-    await redis.set(key, JSON.stringify(charts));
+    await redis.setex(key, redisTTL, JSON.stringify(charts));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -370,7 +370,7 @@ export const getBarCharts = catchAsyncErrors(async (req, res, next) => {
       orders: ordersCounts,
     };
 
-    await redis.set(key, JSON.stringify(charts));
+    await redis.setex(key, redisTTL, JSON.stringify(charts));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -427,7 +427,7 @@ export const getLineCharts = catchAsyncErrors(async (req, res, next) => {
       revenue,
     };
 
-    await redis.set(key, JSON.stringify(charts));
+    await redis.setex(key, redisTTL, JSON.stringify(charts));
   }
 
   return res.status(HttpStatus.OK).json({

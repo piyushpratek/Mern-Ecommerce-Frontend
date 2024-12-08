@@ -13,7 +13,7 @@ import cloudinary from 'cloudinary'
 import fs from 'fs'
 import { Review } from "../models/review";
 import { User } from "../models/user";
-import { redis } from "../../server";
+import { redis, redisTTL } from "../../server";
 
 // import { faker } from "@faker-js/faker";
 
@@ -28,7 +28,7 @@ export const getlatestProducts = catchAsyncErrors(async (req, res, next) => {
     products = JSON.parse(products);
   else {
     products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
-    await redis.set("latest-products", JSON.stringify(products));
+    await redis.setex("latest-products", redisTTL, JSON.stringify(products));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -48,7 +48,7 @@ export const getAllCategories = catchAsyncErrors(async (req, res, next) => {
     categories = JSON.parse(categories);
   else {
     categories = await Product.distinct("category");
-    await redis.set("categories", JSON.stringify(categories));
+    await redis.setex("categories", redisTTL, JSON.stringify(categories));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -67,7 +67,7 @@ export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
     products = JSON.parse(products);
   else {
     products = await Product.find({});
-    await redis.set("all-products", JSON.stringify(products));
+    await redis.setex("all-products", redisTTL, JSON.stringify(products));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -81,7 +81,9 @@ export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 
   const id = req.params.id;
 
-  product = await redis.get(`product-${id}`)
+  const key = `product-${id}`
+
+  product = await redis.get(key)
 
   if (product)
     product = JSON.parse(product);
@@ -90,7 +92,7 @@ export const getSingleProduct = catchAsyncErrors(async (req, res, next) => {
 
     if (!product) return next(new ErrorHandler("Product Not Found", HttpStatus.NOT_FOUND));
 
-    await redis.set(`product-${id}`, JSON.stringify(product));
+    await redis.setex(key, redisTTL, JSON.stringify(product));
   }
 
   return res.status(HttpStatus.OK).json({
@@ -327,8 +329,7 @@ export const allReviewsOfProduct = catchAsyncErrors(async (req, res, next) => {
       .populate("user", "name photo")
       .sort({ updatedAt: -1 });
 
-    // await redis.setex(key, redisTTL, JSON.stringify(reviews));
-    await redis.set(key, JSON.stringify(reviews));
+    await redis.setex(key, redisTTL, JSON.stringify(reviews));
   }
 
   return res.status(HttpStatus.OK).json({

@@ -5,7 +5,8 @@ import connectDB from './src/config/database'
 import { v2 as cloudinary } from "cloudinary";
 import { connectRedis } from './src/utils/features';
 
-// const redisURI = process.env.REDIS_URI || ""
+export const redisTTL = process.env.REDIS_TTL || 60 * 60 * 4
+
 // Handling uncaught Exception
 process.on('uncaughtException', (err: Error) => {
     logger.error(`Error: ${err.message}`)

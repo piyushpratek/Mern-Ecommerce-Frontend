@@ -5,7 +5,7 @@ import { Order } from "../models/order";
 import { invalidateCache, reduceStock } from "../utils/features";
 import ErrorHandler from "../utils/utility-class";
 import { HttpStatus } from "../http-status.enum";
-import { redis } from "../../server";
+import { redis, redisTTL } from "../../server";
 
 export const myOrders = catchAsyncErrors(async (req, res, next) => {
   const { id: user } = req.query;
@@ -19,7 +19,7 @@ export const myOrders = catchAsyncErrors(async (req, res, next) => {
   if (orders) orders = JSON.parse(orders);
   else {
     orders = await Order.find({ user });
-    await redis.set(key, JSON.stringify(orders));
+    await redis.setex(key, redisTTL, JSON.stringify(orders));
   }
   return res.status(HttpStatus.OK).json({
     success: true,
@@ -38,7 +38,7 @@ export const allOrders = catchAsyncErrors(async (req, res, next) => {
   if (orders) orders = JSON.parse(orders);
   else {
     orders = await Order.find().populate("user", "name");
-    await redis.set(key, JSON.stringify(orders));
+    await redis.setex(key, redisTTL, JSON.stringify(orders));
   }
   return res.status(HttpStatus.OK).json({
     success: true,
@@ -60,7 +60,7 @@ export const getSingleOrder = catchAsyncErrors(async (req, res, next) => {
 
     if (!order) return next(new ErrorHandler("Order Not Found", HttpStatus.NOT_FOUND));
 
-    await redis.set(key, JSON.stringify(order));
+    await redis.setex(key, redisTTL, JSON.stringify(order));
   }
   return res.status(HttpStatus.OK).json({
     success: true,
