@@ -40,10 +40,16 @@ export const invalidateCache = async ({
   product,
   order,
   admin,
+  review,
   userId,
   orderId,
   productId,
 }: InvalidateCacheProps) => {
+
+  if (review) {
+    await redis.del([`reviews-${productId}`]);
+  }
+
   if (product) {
     const productKeys: string[] = [
       "latest-products",
