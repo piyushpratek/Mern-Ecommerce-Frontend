@@ -1,22 +1,21 @@
-# version: '3.8'
 services:
-  # mongodb:
-  #   image: mongo
-  #   container_name: mongodb
-  #   ports:
-  #     - '27017:27017'
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: admin
-  #     MONGO_INITDB_ROOT_PASSWORD: password
-  #   volumes:
-  #     - mongodb_data:/data/db
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongodb_data:/data/db
 
-  # redis:
-  #   image: redis/redis-stack
-  #   container_name: redis
-  #   ports:
-  #     - 6379:6379
-  #     - 8001:8001
+  redis:
+    image: redis/redis-stack
+    container_name: redis
+    ports:
+      - 6379:6379
+      - 8001:8001
 
   server:
     build:
@@ -31,9 +30,9 @@ services:
       - NODE_ENV=development
       - MONGO_URI=mongodb://admin:password@mongodb
       - REDIS_URI=redis://redis
-    # depends_on:
-    #   - mongodb
-    #   - redis
+    depends_on:
+      - mongodb
+      - redis
     develop:
       watch:
         - path: ./ecommerce-backend/package*.json
@@ -42,24 +41,24 @@ services:
           target: /app
           action: sync
 
-  # client:
-  #   build:
-  #     context: ./ecommerce-frontend
-  #     dockerfile: Dockerfile.env
-  #   container_name: client
-  #   ports:
-  #     - 5173:5173
-  #   env_file:
-  #     - ./ecommerce-frontend/.env
-  #   depends_on:
-  #     - server
-  #   develop:
-  #     watch:
-  #       - path: ./ecommerce-frontend/package*.json
-  #         action: rebuild
-  #       - path: ./ecommerce-frontend
-  #         target: /app
-  #         action: sync
+  client:
+    build:
+      context: ./ecommerce-frontend
+      dockerfile: Dockerfile.dev
+    container_name: client
+    ports:
+      - 5173:5173
+    env_file:
+      - ./ecommerce-frontend/.env
+    depends_on:
+      - server
+    develop:
+      watch:
+        - path: ./ecommerce-frontend/package*.json
+          action: rebuild
+        - path: ./ecommerce-frontend
+          target: /app
+          action: sync
 
 volumes:
   mongodb_data:
