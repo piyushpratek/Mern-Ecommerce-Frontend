@@ -3,6 +3,7 @@ services:
     image: mongo
     container_name: mongodb
     ports:
+      # Note: We are using 27018 to avoid port already running on host machine
       - 27018:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -42,6 +43,9 @@ services:
         - path: ./ecommerce-backend
           target: /app
           action: sync
+        # Note: Rebuild server container when compose.yaml file -Sahil
+        - path: compose.yaml
+          action: rebuild
 
   client:
     build:
@@ -61,6 +65,9 @@ services:
         - path: ./ecommerce-frontend
           target: /app
           action: sync
+        # Note: Rebuild server container when compose.yaml file -Sahil
+        - path: compose.yaml
+          action: rebuild
 
 volumes:
   mongodb_data:
