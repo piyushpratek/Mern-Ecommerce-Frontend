@@ -3,7 +3,7 @@ services:
     image: mongo
     container_name: mongodb
     ports:
-      - '27017:27017'
+      - 27018:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
@@ -28,7 +28,9 @@ services:
       - ./ecommerce-backend/.env.development
     environment:
       - NODE_ENV=development
-      - MONGO_URI=mongodb://admin:password@mongodb
+      - MONGO_URI=mongodb://admin:password@mongodb/ecommerce-2024?authSource=admin
+      # Use below connection string to connect to connect to "mongodb container" by using "MongoDb Compass" application - Sahil (tested on 10 Dec, 2024)
+      # mongodb://admin:password@localhost:27018/ecommerce-2024?authSource=admin
       - REDIS_URI=redis://redis
     depends_on:
       - mongodb
