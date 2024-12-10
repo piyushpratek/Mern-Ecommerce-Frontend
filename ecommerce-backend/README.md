@@ -38,4 +38,4 @@ npmjs link for ioredis - https://www.npmjs.com/package/ioredis
 to start docker - docker compose up -d
 to stop docker container - docker compose down
 
-docker compose watch
+to start the docker container and watch mode - docker compose watch
